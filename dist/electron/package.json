@@ -1,7 +1,7 @@
 {
   "name": "electron",
   "version": "1.0.0",
-  "author": "gxs <gxsandzxl@163.com>",
-  "description": "A muti-page project",
+  "author": "nico <28344189@qq.com>",
+  "description": "electron-vue webpack 多页面Demo",
   "main": "main.js"
 }

@@ -15,8 +15,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .build-config/webpack.renderer.config.js"
   },
   "build": {
-    "productName": "腾讯智慧法院",
-    "appId": "com.tencent.court.com",
+    "productName": "multi-page",
+    "appId": "com.tenmulti.page.com",
     "directories": {
       "output": "build"
     },
