@@ -47,11 +47,11 @@ export default {
         username: "admin",
         password: "123123",
         role: "1,2,3",
-        identityId: "612324198209162051",
+        identityId: "",
         signPic: "",
-        nickName: "张鑫",
-        avatar: "static/images/UserAvatar.jpg",
-        openid: "osLDW5TqhUuKpya748HDo8SfRAgw"
+        nickName: "",
+        avatar: "",
+        openid: ""
       },
       rules: {
         username: [{ required: true, message: "请输入账号", trigger: "blur" }],
@@ -98,7 +98,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100vh;
-  background-image: url(~@/assets/login_bg.jpg);
+  // background-image: url(~@/assets/login_bg.jpg);
   background-size: cover;
   background-position: center;
   user-select: none;
