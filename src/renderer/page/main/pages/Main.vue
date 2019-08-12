@@ -1,7 +1,7 @@
 <template>
   <div ref="container">
-    <h1>我是主页面</h1>
-    <button @click="openNewPage">退出重新登录</button>
+    <h1>{{userInfo}}</h1>
+    <el-button @click="logout">退出重新登录</el-button>
   </div>
 </template>
 
@@ -9,18 +9,27 @@
 export default {
   data() {
     return {
-      isShowNewPage: false
+      userInfo:null
     };
   },
+  watch:{
+    userInfo:{
+      deep:true,
+      handler(val){
+        console.log(val)
+      }
+    }
+  },
   created() {
-    console.log(this.$electron.ipcRenderer.send);
+    this.userInfo = this.$electron.remote.getGlobal('appData')
   },
   methods: {
-    openNewPage() {
+    logout() {
       this.$electron.ipcRenderer.send("showLoginWindow");
       this.$electron.ipcRenderer.send("hideMainWindow");
+      this.$electron.remote.getGlobal('appData').userInfo = null;
     }
-  }
+  },
 };
 </script>
 

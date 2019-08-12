@@ -2,9 +2,10 @@
 import {
     app,
     ipcMain,
-    BrowserWindow
+    BrowserWindow,
+    remote
 } from 'electron' // eslint-disable-line
-
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 if (process.env.NODE_ENV !== 'development') {
     global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
@@ -40,8 +41,8 @@ function createLoginWindow() {
     });
     // 引入main.js，负责悬浮窗口内主进程和渲染进程之间的通信
     require('./main');
-    global.loginWindow = {
-        id: loginWindow.id
+    global.appData = {
+        userInfo: null
     };
 }
 
@@ -61,12 +62,10 @@ app.on('activate', () => {
 });
 
 ipcMain.on('hideLoginWindow', (e) =>{
-    console.log(e)
     loginWindow.hide()
 })
 
 ipcMain.on('showLoginWindow', (e) =>{
-    console.log(e)
     // loginWindow.loadURL(winURL)
     loginWindow.setContentSize(500, 323)
     loginWindow.show()

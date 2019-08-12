@@ -3,7 +3,7 @@ import {
   ipcMain,
   screen
 } from 'electron';
-
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 let mainWin = null;
 const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/main' : `file://${__dirname}/main/index.html`;
 
@@ -13,11 +13,11 @@ function createMainWindow() {
     width: 1174,
     frame: false,
     useContentSize: true,
-    title:"主页",
+    title: "主页",
     // titleBarStyle: "hidden",
     resizable: false,
     webPreferences: {
-      devTools:true,
+      devTools: true,
       webSecurity: false
     }
   });
@@ -35,15 +35,15 @@ function createMainWindow() {
     mainWin = null;
   });
 
-  global.newPage = {
-    id: mainWin.id
+  global.appData = {
+    userInfo: null
   };
 }
 
 /**
  * 监听创建新窗口
  */
-ipcMain.on('showMainWindow', () => {
+ipcMain.on('showMainWindow', (event, arg) => {
   if (mainWin) {
     if (mainWin.isVisible()) {
       createMainWindow();

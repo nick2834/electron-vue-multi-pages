@@ -62,9 +62,6 @@ export default {
       loading: false
     };
   },
-  created() {
-    console.log(this.$electron.ipcRenderer.send);
-  },
   methods: {
     submitForm(userForm) {
       let _this = this;
@@ -72,7 +69,8 @@ export default {
         if (valid) {
 		  _this.loading = true;
       _this.$electron.ipcRenderer.send("showMainWindow");
-      _this.$electron.ipcRenderer.send("hideLoginWindow",{test:"123"});
+      _this.$electron.ipcRenderer.send("hideLoginWindow");
+      _this.$electron.remote.getGlobal('appData').userInfo = _this.userForm
 		  _this.loading = false;
 		  return
           _this.$store
@@ -90,6 +88,9 @@ export default {
         }
       });
     },
+  },
+  created(){
+    console.log(this.$electron.remote.getGlobal('appData'))
   }
 };
 </script>

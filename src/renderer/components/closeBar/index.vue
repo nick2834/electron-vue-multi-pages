@@ -32,6 +32,7 @@ export default {
       this.$electron.ipcRenderer.send("min-app");
     },
     closeClick() {
+      this.$electron.remote.getGlobal('appData').userInfo = null;
       this.$electron.ipcRenderer.send("close-app");
     },
     errorClick(){
