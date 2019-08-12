@@ -23,7 +23,7 @@ export default {
   display: flex;
   width: 100%;
   height: 100vh;
-  background-color: #2b2c2f;
+  /* background-color: #2b2c2f; */
   overflow: hidden;
   user-select: none;
 }

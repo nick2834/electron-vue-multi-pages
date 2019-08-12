@@ -38,6 +38,9 @@ export default {
     errorClick(){
       this.$electron.ipcRenderer.send("open-error-dialog");
     }
+  },
+  mounted(){
+    console.log(this.$route.path)
   }
 };
 </script>

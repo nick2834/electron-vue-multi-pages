@@ -117,7 +117,7 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
-  background: #ffffff;
+  background: rgba(255,255,255,.8);
 }
 .login_left {
   width: 300px;

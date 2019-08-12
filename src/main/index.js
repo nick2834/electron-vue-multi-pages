@@ -26,6 +26,7 @@ function createLoginWindow() {
         },
         show: true,
         title: '登录',
+        transparent:true,
         autoHideMenuBar: true
     });
     loginWindow.openDevTools() // 开发者工具
