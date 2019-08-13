@@ -6,30 +6,36 @@
 </template>
 
 <script>
+import store from '../../store'
 export default {
   data() {
     return {
       userInfo:null
     };
   },
-  watch:{
-    userInfo:{
-      deep:true,
-      handler(val){
-        console.log(val)
+  computed: {
+    user: {
+      get() {
+        return this.$store.state.user
       }
     }
   },
   created() {
     this.userInfo = this.$electron.remote.getGlobal('appData')
+    // console.log(this.user);
+    
   },
   methods: {
     logout() {
       this.$electron.ipcRenderer.send("showLoginWindow");
       this.$electron.ipcRenderer.send("hideMainWindow");
       this.$electron.remote.getGlobal('appData').userInfo = null;
+      this.$store.commit('REMOVE_USER', null)
     }
   },
+  mounted(){
+    console.log(store.state);
+  }
 };
 </script>
 
