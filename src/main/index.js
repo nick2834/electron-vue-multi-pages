@@ -24,7 +24,7 @@ function createLoginWindow() {
             webSecurity: false,
             devTools: true,
         },
-        show: true,
+        show: false,
         title: '登录',
         transparent:true,
         autoHideMenuBar: true
@@ -32,7 +32,7 @@ function createLoginWindow() {
     loginWindow.openDevTools() // 开发者工具
     loginWindow.loadURL(winURL);
     loginWindow.once('ready-to-show', () => {
-        loginWindow.maximize(); 
+        loginWindow.show(); 
     });
     loginWindow.on('closed', () => {
         loginWindow = null;
