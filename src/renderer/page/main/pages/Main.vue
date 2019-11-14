@@ -10,7 +10,7 @@
             </span>
           </div>
         </el-col>
-        <el-col :span="10" :offset="2" class="nav_menu">
+        <el-col :span="11" :offset="1" class="nav_menu">
           <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
