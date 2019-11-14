@@ -18,21 +18,24 @@ function createLoginWindow() {
     loginWindow = new BrowserWindow({
         height: 323,
         width: 500,
+        maximizable:false,
         useContentSize: true,
-        frame:false,
+        resizable: false,
+        frame: false,
         webPreferences: {
             webSecurity: false,
             devTools: true,
         },
         show: false,
         title: '登录',
-        transparent:true,
+        // transparent: true,
+        titleBarStyle: "hidden",
         autoHideMenuBar: true
     });
     loginWindow.openDevTools() // 开发者工具
     loginWindow.loadURL(winURL);
     loginWindow.once('ready-to-show', () => {
-        loginWindow.show(); 
+        loginWindow.show();
     });
     loginWindow.on('closed', () => {
         loginWindow = null;
@@ -62,11 +65,11 @@ app.on('activate', () => {
     }
 });
 
-ipcMain.on('hideLoginWindow', (e) =>{
+ipcMain.on('hideLoginWindow', (e) => {
     loginWindow.hide()
 })
 
-ipcMain.on('showLoginWindow', (e) =>{
+ipcMain.on('showLoginWindow', (e) => {
     // loginWindow.loadURL(winURL)
     loginWindow.setContentSize(500, 323)
     loginWindow.show()

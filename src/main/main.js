@@ -12,9 +12,10 @@ function createMainWindow() {
     height: 762,
     width: 1174,
     frame: false,
+    show: false,
     useContentSize: true,
     title: "主页",
-    // titleBarStyle: "hidden",
+    titleBarStyle: "hidden",
     resizable: false,
     webPreferences: {
       devTools: true,

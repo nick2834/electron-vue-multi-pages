@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <div id="login">
-      <div class="close__bar">
+      <!-- <div class="close__bar">
         <div class="close_btn__group">
           <span class="icon_btn icon_minus el-icon-setting"></span>
           <span class="icon_btn icon_minus el-icon-minus"></span>
           <span class="icon_btn icon_close el-icon-close"></span>
         </div>
-      </div>
+      </div> -->
       <div class="login-container">
         <div class="login_box login_left dragable">
           <div class="login_header no__dragable">
