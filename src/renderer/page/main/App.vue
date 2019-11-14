@@ -1,21 +1,22 @@
 <template>
   <div id="app">
-    <close-bar />
+    <!-- <close-bar /> -->
     <router-view/>
   </div>
 </template>
 
 <script>
-import closeBar from "@/components/closeBar";
+// import closeBar from "@/components/closeBar";
 export default {
   name: 'App',
   components: {
-    closeBar
+    // closeBar
   }
 };
 </script>
 
 <style>
+@import "../../assets/style/_base.scss";
 @import "../../assets/style/reset.css";
 @import "../../assets/fonts/iconfont.css";
 #app {
@@ -23,7 +24,7 @@ export default {
   display: flex;
   width: 100%;
   height: 100vh;
-  background-color: #2b2c2f;
+  background-color: #fdfdfd;
   overflow: hidden;
   user-select: none;
 }
