@@ -3,7 +3,6 @@ import {
     app,
     ipcMain,
     BrowserWindow,
-    remote
 } from 'electron' // eslint-disable-line
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 if (process.env.NODE_ENV !== 'development') {

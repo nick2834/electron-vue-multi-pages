@@ -25,18 +25,20 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      ipc:this.$electron.ipcRenderer
+    };
   },
   methods: {
     minusClick() {
-      this.$electron.ipcRenderer.send("min-app");
+      this.ipc.send("mian_min");
     },
     closeClick() {
       this.$electron.remote.getGlobal('appData').userInfo = null;
-      this.$electron.ipcRenderer.send("close-app");
+      this.ipc.send("mian_close");
     },
     errorClick(){
-      this.$electron.ipcRenderer.send("open-error-dialog");
+      this.ipc.send("open-error-dialog");
     }
   },
   mounted(){
@@ -45,15 +47,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .close_bar {
-  display: flex;
-  position: absolute;
-  right: 0;
-  z-index: 2;
+  // display: flex;
+  // position: absolute;
+  // right: 0;
+  // z-index: 2;
   cursor: pointer;
-  width: 100%;
+  // width: 100%;
   flex-direction: row-reverse;
-  .btn__group {
-  }
   .icon_btn {
     cursor: pointer;
     width: 20px;

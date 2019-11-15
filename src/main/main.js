@@ -1,11 +1,10 @@
 import {
   BrowserWindow,
-  ipcMain,
-  screen
+  ipcMain
 } from 'electron';
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 let mainWin = null;
-const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/main' : `file://${__dirname}/main/index.html`;
+const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/main/#wechat' : `file://${__dirname}/main/index.html/#wechat`;
 
 function createMainWindow() {
   mainWin = new BrowserWindow({
@@ -15,7 +14,7 @@ function createMainWindow() {
     show: true,
     useContentSize: true,
     title: "主页",
-    titleBarStyle: "hidden",
+    // titleBarStyle: "hidden",
     resizable: false,
     webPreferences: {
       devTools: true,
@@ -61,3 +60,14 @@ ipcMain.on('hideMainWindow', () => {
     mainWin.hide();
   }
 });
+
+
+ipcMain.on('mian_min', e=> mainWin.minimize());
+ipcMain.on('mian_max', e=> {
+    if (mainWin.isMaximized()) {
+        mainWin.unmaximize()
+    } else {
+        mainWin.maximize()
+    }
+});
+ipcMain.on('mian_close', e=> mainWin.close());
