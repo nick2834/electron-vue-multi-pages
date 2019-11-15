@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import AChatList from "@/components/chatList";
+import AChatList from "@/components/AchatList";
 export default {
   data() {
     return {};
@@ -26,9 +26,6 @@ export default {
       this.$electron.ipcRenderer.send("hideMainWindow");
       this.$electron.remote.getGlobal("appData").userInfo = null;
       this.$store.commit("REMOVE_USER", null);
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
     },
     // 导出PDF
     download() {

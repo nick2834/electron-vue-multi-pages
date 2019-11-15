@@ -4,8 +4,8 @@
     <li v-for="i in count" class="chat_list-item infinite-list-item" :key="i">
       <el-avatar>{{i}}</el-avatar>
       <div class="chat_list-content">
-          <div>123</div>
-          <div>456</div>
+        <div>123</div>
+        <div>456</div>
       </div>
     </li>
   </ul>
@@ -21,7 +21,19 @@ export default {
   methods: {
     load() {
       this.count += 2;
+    },
+    getList() {
+      this.$http({
+        url: "/chatlist/list",
+        method: "get"
+      }).then(res => {
+        console.log(res);
+      });
     }
+  },
+  mounted() {},
+  created() {
+    this.getList();
   }
 };
 </script>
@@ -31,12 +43,12 @@ export default {
   overflow: auto;
   padding: 0 20px;
   .chat_list-item {
-      margin: 10px 0;
-      display: flex;
-      cursor: pointer;
-      .chat_list-content{
-          margin-left: 10px
-      }
+    margin: 10px 0;
+    display: flex;
+    cursor: pointer;
+    .chat_list-content {
+      margin-left: 10px;
+    }
   }
 }
 </style>
