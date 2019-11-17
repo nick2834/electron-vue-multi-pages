@@ -56,22 +56,24 @@ export default {
   flex-direction: row-reverse;
   .icon_btn {
     cursor: pointer;
-    width: 20px;
+    width: 15px;
     height: 15px;
     font-size: 16px;
     line-height: 15px;
     text-align: center;
     color: #ffffff;
-    font-weight: bold;
+    // font-weight: bold;
     padding: 5px;
     // background: rgba($color: #ffffff, $alpha: 0.6);
     &.icon_minus {
       margin-right: 1px;
       &:hover {
+        border-radius: 50%;
         background: rgba($color: #ffffff, $alpha: 0.8);
       }
     }
     &.icon_close:hover {
+      border-radius: 50%;
       background: #f56c6c;
       color: #ffffff;
     }

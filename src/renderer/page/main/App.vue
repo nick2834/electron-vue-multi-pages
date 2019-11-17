@@ -1,16 +1,21 @@
 <template>
   <div id="app">
-    <!-- <close-bar /> -->
     <router-view/>
   </div>
 </template>
 
 <script>
-// import closeBar from "@/components/closeBar";
 export default {
   name: 'App',
-  components: {
-    // closeBar
+  computed:{
+    userInfo: {
+      get() {
+        return this.$store.state.user.userInfo;
+      }
+    }
+  },
+  mounted(){
+    this.$store.dispatch('tencentIm/getIdentifierActions',this.userInfo)
   }
 };
 </script>

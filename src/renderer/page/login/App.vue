@@ -7,7 +7,7 @@
           <span class="icon_btn icon_minus el-icon-minus"></span>
           <span class="icon_btn icon_close el-icon-close"></span>
         </div>
-      </div> -->
+      </div>-->
       <div class="login-container">
         <div class="login_box login_left dragable">
           <div class="login_header no__dragable">
@@ -59,13 +59,7 @@ export default {
       activeId: 0,
       userForm: {
         username: "admin",
-        password: "123123",
-        role: "1,2,3",
-        identityId: "",
-        signPic: "",
-        nickName: "",
-        avatar: "",
-        openid: ""
+        password: "123123"
       },
       rules: {
         username: [{ required: true, message: "请输入账号", trigger: "blur" }],
@@ -79,13 +73,29 @@ export default {
   methods: {
     submitForm(userForm) {
       let _this = this;
+      let el = _this.$electron;
+      _this.loading = true;
       _this.$refs[userForm].validate(valid => {
         if (valid) {
-          _this.loading = true;
-          _this.$electron.ipcRenderer.send("showMainWindow");
-          _this.$electron.ipcRenderer.send("hideLoginWindow");
-          _this.$electron.remote.getGlobal("appData").userInfo = _this.userForm;
-          _this.loading = false;
+          this.$http
+            .post("auth/login", {
+              username: "tc123",
+              password: "123456",
+              moduleId: "tc-login"
+            })
+            .then(({ data }) => {
+              _this.loading = false;
+              let token = data.data.Authorization;
+              el.ipcRenderer.send("showMainWindow");
+              el.ipcRenderer.send("hideLoginWindow");
+              el.remote.getGlobal("appData").Authorization = token;
+            });
+          // return;
+
+          // _this.$electron.ipcRenderer.send("showMainWindow");
+          // _this.$electron.ipcRenderer.send("hideLoginWindow");
+          // _this.$electron.remote.getGlobal("appData").userInfo = _this.userForm;
+          // _this.loading = false;
         } else {
           return false;
         }

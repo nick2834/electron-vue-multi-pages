@@ -1,36 +1,30 @@
-// import Vue from 'vue'
-import axios from 'axios'
-// import router from '@/router'
-// axios.defaults.baseURL = "http://localhost:9527";
-const http = axios.create({
-  timeout: 1000 * 30,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8'
+import http from "axios";
+import qs from "qs";
+const Token = sessionStorage.Authorization || null
+// http 配置
+http.defaults.timeout = 50000;
+// http.defaults.baseURL = process.env.DEV_SERVER;
+http.defaults.baseURL = '你的地址';
+http.defaults.headers.common['Authorization'] = Token;
+http.defaults.headers.common['ContentType'] = 'application/json;Charset=UTF-8';
+// http request 拦截器
+http.interceptors.request.use(
+  config => {
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
   }
-})
+);
 
-/**
- * 请求拦截
- */
-http.interceptors.request.use(config => {
-  // config.headers['token'] = Vue.cookie.get('token') // 请求头带上token
-  return config
-}, error => {
-  return Promise.reject(error)
-})
+// http response 拦截器
+http.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
-/**
- * 响应拦截
- */
-http.interceptors.response.use(response => {
-  // if (response.data && response.data.code === 401) { // 401, token失效
-  //   clearLoginInfo()
-  //   router.push({ name: 'login' })
-  // }
-  return response
-}, error => {
-  return Promise.reject(error)
-})
-
-export default http
+export default http;

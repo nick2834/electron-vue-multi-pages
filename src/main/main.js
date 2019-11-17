@@ -32,8 +32,8 @@ function createMainWindow() {
     mainWin = null;
   });
 
-  global.appData = {
-    userInfo: null
+  global.appData = { 
+    Authorization: ""
   };
 }
 
@@ -62,12 +62,12 @@ ipcMain.on('hideMainWindow', () => {
 });
 
 
-ipcMain.on('mian_min', e=> mainWin.minimize());
-ipcMain.on('mian_max', e=> {
-    if (mainWin.isMaximized()) {
-        mainWin.unmaximize()
-    } else {
-        mainWin.maximize()
-    }
+ipcMain.on('mian_min', e => mainWin.minimize());
+ipcMain.on('mian_max', e => {
+  if (mainWin.isMaximized()) {
+    mainWin.unmaximize()
+  } else {
+    mainWin.maximize()
+  }
 });
-ipcMain.on('mian_close', e=> mainWin.close());
+ipcMain.on('mian_close', e => mainWin.close());

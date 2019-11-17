@@ -17,7 +17,7 @@ function createLoginWindow() {
     loginWindow = new BrowserWindow({
         height: 323,
         width: 500,
-        maximizable:false,
+        maximizable: false,
         useContentSize: true,
         resizable: false,
         frame: false,
@@ -45,7 +45,8 @@ function createLoginWindow() {
     // 引入main.js，负责悬浮窗口内主进程和渲染进程之间的通信
     require('./main');
     global.appData = {
-        userInfo: null
+        // userInfo: null,
+        Authorization: ""
     };
 }
 

@@ -15,15 +15,20 @@ export default {
     };
   },
   computed: {
-    user: {
+    Authorization: {
       get() {
-        return this.$store.state.user;
+        return this.$store.state.Authorization;
+      },
+      set(val) {
+        this.$store.commit("user/updateToken", val);
       }
     }
   },
   components: { AHeader },
   created() {
-    this.userInfo = this.$electron.remote.getGlobal("appData");
+    var token = this.$electron.remote.getGlobal("appData").Authorization;
+    sessionStorage.Authorization = token;
+    this.Authorization = token
   },
 };
 </script>

@@ -25,6 +25,6 @@ export default {
 <style scoped lang="scss">
 .search {
   padding-bottom:20px;
-  border-bottom: 1px solid #f6f7f9 
+  border-bottom: 1px solid $borderColor
 }
 </style>

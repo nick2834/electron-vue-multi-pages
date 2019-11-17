@@ -11,7 +11,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-const {entries, htmlPlugin} = require('./muti-page.config');
+const { entries, htmlPlugin } = require('./muti-page.config');
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -45,7 +45,17 @@ let rendererConfig = {
       // },
       {
         test: /\.scss$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader']
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "sass-loader",
+          {
+            loader: "sass-resources-loader",
+            options: {
+              resources: path.resolve(__dirname, '../src/renderer/assets/style/_base.scss')
+            }
+          }
+        ]
       },
       {
         test: /\.sass$/,
@@ -127,7 +137,7 @@ let rendererConfig = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new MiniCssExtractPlugin({filename: 'styles.css'}),
+    new MiniCssExtractPlugin({ filename: 'styles.css' }),
     // new HtmlWebpackPlugin({
     //   filename: 'index.html',
     //   template: path.resolve(__dirname, '../src/index.ejs'),
