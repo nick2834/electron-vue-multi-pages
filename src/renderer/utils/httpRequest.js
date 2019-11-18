@@ -4,7 +4,7 @@ const Token = sessionStorage.Authorization || null
 // http 配置
 http.defaults.timeout = 50000;
 // http.defaults.baseURL = process.env.DEV_SERVER;
-http.defaults.baseURL = '你的地址';
+http.defaults.baseURL = '';
 http.defaults.headers.common['Authorization'] = Token;
 http.defaults.headers.common['ContentType'] = 'application/json;Charset=UTF-8';
 // http request 拦截器

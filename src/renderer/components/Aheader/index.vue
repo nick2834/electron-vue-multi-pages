@@ -14,12 +14,15 @@
       </el-dropdown-menu>
     </el-dropdown>
     <el-menu
-      :default-active="$route.name"
+      :default-active="$route.meta.parentName ? $route.meta.parentName : $route.name"
       class="no__dragable"
       mode="horizontal"
       router
       @select="handleSelect"
     >
+      <el-menu-item index="setup" v-if="!isJudge">
+        <i class="iconfont icon-lian"></i>
+      </el-menu-item>
       <el-menu-item index="wechat">
         <i class="iconfont icon-wechat">
           <span class="badge" v-show="msgCount != 0">{{msgCount > 99 ? '99+':msgCount}}</span>
@@ -63,25 +66,43 @@ export default {
       get() {
         return this.$store.state.user.role;
       }
+    },
+    isJudge: {
+      get() {
+        return this.$store.state.user.isJudge;
+      },
+      set(val) {
+        this.$store.commit("user/updateIsjudge", val);
+      }
+    },
+    caseId: {
+      get() {
+        return this.$store.state.cases.caseId;
+      },
+      set(val) {
+        this.$store.commit("cases/clearCaseid", val);
+      }
     }
   },
   components: { closeBar },
   methods: {
     handleCommand(e) {
+      this.isJudge = e.role == 3 ? true : false;
       this.defauleRoleName = e.name;
       this.$store.commit("user/updateRole", e.role);
       this.roleList = userRoleArr.filter(
         item => item.name != this.defauleRoleName
       );
+      this.caseId = "";
       this.show = false;
     },
     handleSelect(key, keyPath) {
-      if (key != "wechat") this.$store.commit("cases/clearCaseid", '');;
+      if (key != "wechat") this.$store.commit("cases/clearCaseid", "");
     }
   },
   mounted() {
     this.$store.dispatch("cases/getUnreadMessages");
-    console.log(this.$router.options.routes.filter(item => item.children)[0]);
+    console.log(this.$router.options.routes.filter(item => !item.hidden));
   },
   created() {
     let roles = this.userInfo && this.userInfo.role;
@@ -95,28 +116,28 @@ export default {
       userRoleArr.push({
         id: 0,
         role: 3,
-        name: "身份1"
+        name: "faguan"
       });
     }
     if (roles.indexOf("2") != -1) {
       userRoleArr.push({
         id: 1,
         role: 2,
-        name: "身份2"
+        name: "dailiren"
       });
     }
     if (roles.indexOf("1") != -1) {
       userRoleArr.push({
         id: 2,
         role: 1,
-        name: "身份3"
+        name: "dangshiren"
       });
     }
     if (roles.indexOf("-1") != -1) {
       userRoleArr.push({
         id: 3,
         role: 4,
-        name: "身份3"
+        name: "qitashenfen"
       });
     }
     this.defauleRoleName = userRoleArr[0].name;

@@ -7,7 +7,7 @@ import {
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 if (process.env.NODE_ENV !== 'development') {
     global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
-}
+} 
 let loginWindow;
 const winURL = process.env.NODE_ENV === 'development' ?
     'http://localhost:9080/login' :

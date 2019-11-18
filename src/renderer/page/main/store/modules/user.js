@@ -1,30 +1,32 @@
-import { authLogin } from '@/service/api'
 export default {
   namespaced: true,
   state: {
     userInfo: {
       username: "admin",
       password: "123123",
-      role: "1,2,3",
+      role: "1,2,3,4",
       identityId: "",
       signPic: "",
-      nickName: "测试账号",
+      nickName: "",
       avatar: "static/images/UserAvatar.jpg",
       openid: ""
     },
-    role: 1,
-    name: '',
+    isJudge: true,
+    role: 3,
     Authorization: ""
   },
   mutations: {
-    updateToken(state,token){
+    updateToken(state, token) {
       state.Authorization = token
     },
-    updateRole(state,role){
+    updateRole(state, role) {
       state.role = role
+    },
+    updateIsjudge(state, isJudge) {
+      state.isJudge = isJudge
     }
   },
   actions: {
-    
+
   }
 }

@@ -4,7 +4,10 @@ import http from '@/utils/httpRequest'
 import {
     getIdentifierSign,
     unreadMessageCount,
-    caseList
+    caseList,
+    caseInfo,
+    allRelevant,
+    historyMsg
 } from "./api";
 
 export const getIdentifier = data => {
@@ -16,4 +19,13 @@ export const getUnreadMessage = data => {
 }
 export const selectMyCaseList = data => {
     return http.post(caseList, data, {})
+}
+export const infoByCaseId = data => {
+    return http.post(caseInfo, data, {})
+}
+export const getAllRelevant = data => {
+    return http.post(allRelevant, data, {})
+}
+export const getHistoryMsg = data => {
+    return http.post(historyMsg, data, {})
 }

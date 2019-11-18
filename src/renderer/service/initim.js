@@ -1,6 +1,6 @@
 var imConfig = {
-  sdkappid: 000000000,
-  accountType: 000000,
+  sdkappid: 0,
+  accountType: 0,
   accountMode: 0 //帐号模式，0-表示独立模式，1-表示托管模式
 };
 import TIM from 'tim-js-sdk';

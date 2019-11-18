@@ -13,35 +13,53 @@ const router = new Router({
       hidden: true
     },
     {
-      path: '/',
-      name: 'Main',
-      component: require('../pages/Main').default,
+      path: '/setup',
+      name: 'setup',
+      component: require('../pages/Setup').default,
+      meta: {
+        title: "测试",
+        role:'2,1'
+      }
+    },
+    {
+      path: '/wechat',
+      name: 'wechat',
+      component: require('../pages/Wechat').default,
+      meta: {
+        title: "微信",
+        role:'3,2,1'
+      },
       children: [{
-        path: 'wechat',
-        name: 'wechat',
-        component: require('../pages/Wechat').default,
+        path: '/room',
+        name: 'room',
+        component: require('../pages/Room').default,
         meta: {
-          title: "微信"
-        }
-      }, {
-        path: 'contact',
-        name: 'contact',
-        component: require('../pages/Contact').default,
-        meta: {
-          title: "通讯录"
-        }
-      }, {
-        path: 'collect',
-        name: 'collect',
-        component: require('../pages/Collect').default,
-        meta: {
-          title: "收藏"
-        }
+          title: "房间",
+          parentName: 'wechat',
+          role:'3,2,1'
+        },
       }]
+    }, {
+      path: '/contact',
+      name: 'contact',
+      component: require('../pages/Contact').default,
+      meta: {
+        title: "通讯录",
+        role:'3,2,1'
+      }
+    }, {
+      path: '/collect',
+      name: 'collect',
+      component: require('../pages/Collect').default,
+      meta: {
+        title: "收藏",
+        role:'3,2,1'
+      }
     },
     {
       path: '*',
-      redirect: '/'
+      redirect: '/',
+      hidden: true
     }
   ],
   linkActiveClass: 'active'

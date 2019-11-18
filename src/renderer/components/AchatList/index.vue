@@ -21,7 +21,7 @@
     <div
       class="caseList"
       :class="caseList.length > 0?'no__dragable':'dragable'"
-      v-loading="loading"
+      v-loading="caseLoading"
       element-loading-background="rgb(255, 255, 255)"
     >
       <ul id="caseListBox" v-if="caseList.length > 0">
@@ -55,12 +55,12 @@ export default {
       keyword: "",
       title: "暂无记录",
       activeIndex: 0,
-      caseList: []
+      caseList: [],
+      caseLoading:false
     };
   },
   watch: {
     role(val) {
-      console.log(val);
       this.caseList = [];
       this.selectMyCaseList(true);
     }
@@ -89,17 +89,20 @@ export default {
     },
     handleClick(e) {
       this.activeIndex = e;
-      this.status = e;
+      this.pageNum = 1;
+      this.status = e == 0 ? 2 : 1;
+      this.caseId = "";
       this.selectMyCaseList(true);
-      // this.$store.commit("CLEAR_SELECT_CASE");
     },
     selectCase(item) {
       this.caseId = item.caseId;
-      // this.$store.commit('cases/updateCaseid',item.caseId)
+      this.$router.push({
+        name: "room"
+      });
     },
     selectMyCaseList(isLoading) {
       if (isLoading) {
-        this.loading = true;
+        this.caseLoading = true;
       }
       this.$store
         .dispatch("cases/selectMyCaseList", {
@@ -108,7 +111,7 @@ export default {
           keyword: this.keyword
         })
         .then(res => {
-          this.loading = false;
+          this.caseLoading = false;
           if (res.errorCode == 0 && res.data.case) {
             this.caseList = res.data.case;
           }

@@ -1,28 +1,31 @@
 <template>
   <el-container class="message_container">
-    <el-main class="message_content">
-      <a-message-content></a-message-content>
-      <a-message-input></a-message-input>
-    </el-main>
-    <el-aside :width="isOpen ? '240px':'0'" class="online_container">
-      <span class="toggle_span" :style="{left:isOpen?'0':'-10px'}" @click="isOpen = !isOpen">
-        <i :class="isOpen ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
-      </span>
-      <div class="message_detail">
-        <el-tabs v-model="activeName" class="message_tab">
-          <el-tab-pane label="基本信息" name="base">
-            <a-base-info v-if="caseInfo" :caseInfo="caseInfo"></a-base-info>
-          </el-tab-pane>
-          <el-tab-pane label="案件主体" name="body">
-            <a-case-body v-if="litigantList" :litigantList="litigantList"></a-case-body>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-    </el-aside>
+    <template v-if="caseId != ''">
+      <el-main class="message_content">
+        <a-message-content></a-message-content>
+        <a-message-input></a-message-input>
+      </el-main>
+      <el-aside :width="isOpen ? '240px':'0'" class="online_container">
+        <span class="toggle_span" :style="{left:isOpen?'0':'-10px'}" @click="isOpen = !isOpen">
+          <i :class="isOpen ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
+        </span>
+        <div class="message_detail">
+          <el-tabs v-model="activeName" class="message_tab">
+            <el-tab-pane label="基本信息" name="base">
+              <a-base-info v-if="caseInfo" :caseInfo="caseInfo"></a-base-info>
+            </el-tab-pane>
+            <el-tab-pane label="案件主体" name="body">
+              <a-case-body v-if="litigantList" :litigantList="litigantList"></a-case-body>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </el-aside>
+    </template>
   </el-container>
 </template>
 
 <script>
+import ADocdom from "@/components/ADocdom";
 import AMessageContent from "./messageContent";
 import AMessageInput from "./messageInput";
 import ABaseInfo from "./baseInfo";
@@ -42,6 +45,7 @@ export default {
     };
   },
   components: {
+    ADocdom,
     AMessageContent,
     AMessageInput,
     ABaseInfo,
@@ -162,6 +166,7 @@ export default {
     }
   },
   mounted() {
+    if (this.caseId == "") return;
     this.getInfoByCaseId();
   }
 };

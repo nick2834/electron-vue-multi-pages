@@ -6,7 +6,7 @@
         v-if="$route.path != '/login'"
         class="icon_btn icon_minus el-icon-setting"
         :class="$route.path != '/login' ? 'base__color' :''"
-        @click="errorClick"
+        @click="logout"
       ></span>
       <span
         class="icon_btn icon_minus el-icon-minus"
@@ -26,7 +26,7 @@
 export default {
   data() {
     return {
-      ipc:this.$electron.ipcRenderer
+      ipc: this.$electron.ipcRenderer
     };
   },
   methods: {
@@ -34,15 +34,17 @@ export default {
       this.ipc.send("mian_min");
     },
     closeClick() {
-      this.$electron.remote.getGlobal('appData').userInfo = null;
+      this.$electron.remote.getGlobal("appData").userInfo = null;
       this.ipc.send("mian_close");
     },
-    errorClick(){
-      this.ipc.send("open-error-dialog");
+    logout() {
+      this.$electron.ipcRenderer.send("showLoginWindow");
+      this.$electron.ipcRenderer.send("hideMainWindow");
+      this.$electron.remote.getGlobal("appData").userInfo = null;
+      this.$store.commit("REMOVE_USER", null);
     }
   },
-  mounted(){
-  }
+  mounted() {}
 };
 </script>
 <style lang="scss" scoped>

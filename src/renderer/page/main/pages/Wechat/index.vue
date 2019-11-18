@@ -5,7 +5,7 @@
       <a-chat-list></a-chat-list>
     </el-aside>
     <el-main class="wechat_contaner">
-      <a-message-box v-if="caseId != ''"></a-message-box>
+      <router-view v-if="caseId != ''"></router-view>
       <a-docdom v-else></a-docdom>
     </el-main>
   </el-container>
@@ -13,13 +13,12 @@
 
 <script>
 import AChatList from "@/components/AchatList";
-import AMessageBox from "@/components/AmessageBox";
 import ADocdom from "@/components/ADocdom";
 export default {
   data() {
     return {};
   },
-  components: { AChatList, AMessageBox, ADocdom },
+  components: { AChatList, ADocdom },
   computed: {
     caseId: {
       get() {
@@ -28,12 +27,6 @@ export default {
     }
   },
   methods: {
-    logout() {
-      this.$electron.ipcRenderer.send("showLoginWindow");
-      this.$electron.ipcRenderer.send("hideMainWindow");
-      this.$electron.remote.getGlobal("appData").userInfo = null;
-      this.$store.commit("REMOVE_USER", null);
-    },
     // 导出PDF
     download() {
       this.$http({

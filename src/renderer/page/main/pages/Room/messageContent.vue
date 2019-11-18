@@ -2,6 +2,11 @@
   <div class="message_box">
     <div class="message_title">
       <span class="title">Web前端（JS|React|Angular|V</span>
+      <el-radio-group v-model="messageType" size="small">
+        <el-radio-button label="0">全部</el-radio-button>
+        <el-radio-button label="6">证据</el-radio-button>
+        <el-radio-button label="8">文书</el-radio-button>
+      </el-radio-group>
     </div>
     <ul class="message_list infinite-list" v-infinite-scroll="load">
       <li class="message_item infinite-list-item" v-for="i in newsList" :key="i">
@@ -28,16 +33,62 @@
 </template>
 
 <script>
+import { getHistoryMsg, getAllRelevant } from "@/service";
 export default {
   data() {
     return {
-      newsList: 0
+      newsList: 0,
+      memRelevantVos: [],
+      messageType: 0,
+      totalPage: 0,
+      currentPage: 1,
+      pageCount: 10,
+      isFirst: false,
+      loadDone: true,
+      prevScrollHeight: 0,
+      isTabType: false
     };
+  },
+  computed: {
+    userInfo: {
+      get() {
+        return this.$store.state.user.userInfo;
+      }
+    },
+    caseId: {
+      get() {
+        return this.$store.state.cases.caseId;
+      }
+    }
   },
   methods: {
     load() {
       this.newsList += 2;
+    },
+    getAllrelevants() {
+      let idCard = this.userInfo ? this.userInfo.identityId : null;
+      let caseId = this.caseId;
+      let _this = this;
+      getAllRelevant({
+        caseId: caseId,
+        identityId: idCard,
+        moduleId: "tc-CreateGroup"
+      })
+        .then(({ data }) => {
+          let memList = data.data.memRelevantVos;
+          this.memRelevantVos = memList;
+          let memTypeData = memList.find(item => idCard == item.identityId);
+          if(memTypeData == undefined || memTypeData.type == 0){
+            alert("信息不全");
+          }else{
+            
+          }
+        })
+        .catch(err => {});
     }
+  },
+  mounted() {
+    this.getAllrelevants();
   }
 };
 </script>
@@ -45,11 +96,14 @@ export default {
 <style lang="scss" scoped>
 .message_box {
   height: calc(100vh - 256px);
+  overflow: hidden;
   .message_title {
     font-weight: bold;
     line-height: 30px;
     padding: 0 10px;
     border-bottom: 1px solid $borderColor;
+    display: flex;
+    justify-content: space-between;
     .title {
       cursor: pointer;
     }

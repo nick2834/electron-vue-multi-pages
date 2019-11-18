@@ -52,3 +52,20 @@ $borderColor: #f6f7f9;
     border-left: 1px solid $borderColor;
   }
 }
+
+// 案件详情
+.detail_content{
+  .el-form-item{
+    margin-bottom: 15px;
+    color: #777777;
+  }
+  .el-form-item__label{
+    padding: 0 !important;
+    line-height: 25px;
+    font-size: 12px;
+  }
+  .el-form-item__content{
+    line-height: 25px;
+    font-size: 12px;
+  }
+}
