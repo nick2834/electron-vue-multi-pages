@@ -45,6 +45,7 @@
 
 <script>
 var page = 1;
+import { CreateGroup, getUpdateMsg } from "@/service";
 import placeholder from "@/components/Aplaceholder";
 export default {
   data() {
@@ -56,7 +57,7 @@ export default {
       title: "暂无记录",
       activeIndex: 0,
       caseList: [],
-      caseLoading:false
+      caseLoading: false
     };
   },
   watch: {
@@ -66,6 +67,11 @@ export default {
     }
   },
   computed: {
+    userInfo: {
+      get() {
+        return this.$store.state.user.userInfo;
+      }
+    },
     role: {
       get() {
         return this.$store.state.user.role;
@@ -77,6 +83,30 @@ export default {
       },
       set(val) {
         this.$store.commit("cases/updateCaseid", val);
+      }
+    },
+    groupId: {
+      get() {
+        return this.$store.state.cases.groupId;
+      },
+      set(val) {
+        this.$store.commit("cases/updateGroupId", val);
+      }
+    },
+    roomId: {
+      get() {
+        return this.$store.state.cases.roomId;
+      },
+      set(val) {
+        this.$store.commit("cases/updateRoomId", val);
+      }
+    },
+    newsList: {
+      get() {
+        return this.$store.state.tencentIm.newsList;
+      },
+      set(val) {
+        this.$store.commit("tencentIm/updateNewsList", val);
       }
     }
   },
@@ -96,8 +126,26 @@ export default {
     },
     selectCase(item) {
       this.caseId = item.caseId;
-      this.$router.push({
-        name: "room"
+      this.newsList = "";
+      this.$router.push({ name: "wechat" }); //组织页面二次跳转
+      this.$nextTick(() => {
+        if (this.role != 3 && this.role != 4) {
+          this.$store.dispatch("cases/getDeliveryAddress").then(({ data }) => {
+            if (data && data.address) {
+              this.getCreateGroup();
+              this.$router.push({
+                name: "room",
+                params: {
+                  address: data.address
+                }
+              });
+            } else {
+              this.$router.push({ name: "address" });
+            }
+          });
+        } else {
+          this.getCreateGroup();
+        }
       });
     },
     selectMyCaseList(isLoading) {
@@ -116,6 +164,32 @@ export default {
             this.caseList = res.data.case;
           }
         });
+    },
+    getCreateGroup() {
+      CreateGroup({
+        caseId: this.caseId,
+        identityId: this.userInfo.identityId,
+        moduleId: "tc-CreateGroup",
+        role: this.role
+      }).then(({ data }) => {
+        if (data.status == "OK") {
+          let datas = data.data;
+          this.groupId = datas.groupId;
+          this.roomId = datas.roomId;
+          this.getUpdateMsg();
+          this.$router.push({ name: "room" });
+        }
+      });
+    },
+    getUpdateMsg() {
+      getUpdateMsg({
+        moduleId: "tc-updateMsg",
+        caseId: this.caseId,
+        role: this.role,
+        openid: this.userInfo.openid
+      }).then(res => {
+        this.selectMyCaseList(false);
+      });
     }
   },
   mounted() {},
@@ -193,7 +267,7 @@ export default {
   overflow-y: auto;
   // background: #f2f2f2;
   background: #ffffff;
-
+  position: relative;
   #caseListBox {
     height: 100%;
     position: relative;

@@ -20,29 +20,27 @@ export function initIM(identifier, userSig, identifierNick, commit, state, dispa
 
   tim.on(TIM.EVENT.MESSAGE_RECEIVED, function (msgs) {
     let msgData = msgs.data;
-    console.log(msgData)
-      if (msgData.length > 0) {
-        msgData.map(msg => {
-          if (msg.from != "@TIM#SYSTEM") {
-            setTimeout(() => {
-              if (msg.from == "admin") {
-                let messageBody = msg.payload.text;
-                var msgCount = String(JSON.parse(messageBody).msgCount);
-                console.log(msgCount)
-                // commit("MSG_COUNT", msgCount);
-              } else {
-                // let messageBody = msg.payload.data;
-                // let newsList = state.newsList.filter(item => item.headUrl)
-                // commit('CHANGE_NEWSLIST', newsList)
-                // commit('GET_MESSAGE', JSON.parse(messageBody))
-                // dispatch('getUnreadCaseList', {
-                //   pageNum: 1
-                // })
-              }
-            }, 1000);
-          }
-        })
-      }
+    if (msgData.length > 0) {
+      msgData.map(msg => {
+        if (msg.from != "@TIM#SYSTEM") {
+          setTimeout(() => {
+            if (msg.from == "admin") {
+              let messageBody = msg.payload.text;
+              var msgCount = String(JSON.parse(messageBody).msgCount);
+              commit("updateMsgCount", msgCount);
+            } else {
+              let messageBody = msg.payload.data;
+              let newsList = state.newsList.filter(item => item.headUrl)
+              commit('updateNewsList', newsList)
+              commit('updateMessage', JSON.parse(messageBody))
+              dispatch('getUnreadCaseList', {
+                pageNum: 1
+              })
+            }
+          }, 1000);
+        }
+      })
+    }
   });
   tim.login({
     userID: identifier,

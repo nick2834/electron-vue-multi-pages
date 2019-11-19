@@ -9,19 +9,14 @@
       </el-radio-group>
     </div>
     <ul class="message_list infinite-list" v-infinite-scroll="load">
-      <li class="message_item infinite-list-item" v-for="i in newsList" :key="i">
-        <div class="message_main" :class="i%2 == 0 ? 'other':'self'">
-          <img
-            v-if="i%2 == 0"
-            src="~@/assets/images/avatar.jpg"
-            class="avatar"
-            width="36"
-            height="36"
-            alt
-          />
-          <img v-else src="~@/assets/images/avatar.png" class="avatar" width="36" height="36" alt />
+      <li class="message_item infinite-list-item" v-for="(item,index) in newsList" :key="index">
+        <div
+          class="message_main"
+          :class="item.sendMemIdentityId == userInfo.identityId ? 'self':'other'"
+        >
+          <img :src="item.headUrl" class="avatar" width="36" height="36" alt />
           <div class="message_body">
-            <div class="username">{{i%2 == 0 ?'张三':'李四'}}</div>
+            <div class="username">{{item.sendMemName}}</div>
             <div
               class="content"
             >Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum, voluptas quod? Porro voluptatibus assumenda quibusdam impedit enim repudiandae molestias minima ipsam ad repellendus necessitatibus dolore eligendi, consectetur consequuntur sit quo.</div>
@@ -37,7 +32,7 @@ import { getHistoryMsg, getAllRelevant } from "@/service";
 export default {
   data() {
     return {
-      newsList: 0,
+      newsLists: 0,
       memRelevantVos: [],
       messageType: 0,
       totalPage: 0,
@@ -59,11 +54,24 @@ export default {
       get() {
         return this.$store.state.cases.caseId;
       }
+    },
+    groupId: {
+      get() {
+        return this.$store.state.cases.groupId;
+      }
+    },
+    newsList: {
+      get() {
+        return this.$store.state.tencentIm.newsList;
+      },
+      set(val) {
+        this.$store.commit("tencentIm/updateNewsList", val);
+      }
     }
   },
   methods: {
     load() {
-      this.newsList += 2;
+      this.newsLists += 2;
     },
     getAllrelevants() {
       let idCard = this.userInfo ? this.userInfo.identityId : null;
@@ -78,13 +86,124 @@ export default {
           let memList = data.data.memRelevantVos;
           this.memRelevantVos = memList;
           let memTypeData = memList.find(item => idCard == item.identityId);
-          if(memTypeData == undefined || memTypeData.type == 0){
+          if (memTypeData == undefined || memTypeData.type == 0) {
             alert("信息不全");
-          }else{
-            
+          } else {
+            _this.$store.commit("tencentIm/updateMessagData", {
+              moduleId: "tc-sendmessage",
+              caseId: _this.caseId,
+              sendMemRole: memTypeData.type,
+              juris: memList,
+              sendMemOpenid: memTypeData.openid,
+              messageType: "",
+              messageBody: {},
+              sendMemName: memTypeData.name,
+              questionIdent: 1, //质证标识
+              source: 1,
+              sendMemIdentityId: idCard,
+              isPersonalMsg: 0,
+              shouldReload: false,
+              groupId: _this.groupId,
+              receivers: ""
+            });
+            _this.getHistoryMessage(idCard);
           }
         })
         .catch(err => {});
+    },
+    getHistoryMessage(idCard) {
+      let _this = this;
+      getHistoryMsg({
+        caseId: _this.caseId,
+        messageType: _this.messageType,
+        moduleId: "tc-history",
+        currentPage: _this.currentPage,
+        pageCount: _this.pageCount,
+        identityId: idCard,
+        groupId: _this.groupId
+      }).then(({ data }) => {
+        console.log(data);
+        let messageModels = data.data.messageModels.reverse();
+        _this.totalPage = data.data.totalPage;
+        _this.currentPage = data.data.currentPage;
+        messageModels.map((item, index) => {
+          // 私信
+          if (item.messageType == 16) {
+            if (item.messageBody.openids.indexOf(this.userInfo.openid) != -1) {
+              //判断是否点击过
+              item.messageBody["isHasMe"] = true;
+            } else {
+              item.messageBody["isHasMe"] = false;
+            }
+            if (!item.messageBody.reciveIdentity) {
+              //判断我是否能看到这条消息
+              item.messageBody["iCanSee"] = true;
+            } else {
+              if (item.messageBody.reciveIdentity.indexOf(idCard) != -1) {
+                item.messageBody["iCanSee"] = true;
+              } else {
+                item.messageBody["iCanSee"] = false;
+              }
+            }
+          }
+          if (item.messageType == 17) {
+            if (item.messageBody.openids.indexOf(this.userInfo.openid) != -1) {
+              //判断是否点击过
+              item.messageBody["isHasMe"] = true;
+            } else {
+              item.messageBody["isHasMe"] = false;
+            }
+          }
+          if (item.messageType == 18) {
+            if (!item.messageBody.reciveIdentity) {
+              //判断我是否能看到这条消息
+              item.messageBody["iCanSee"] = true;
+            } else {
+              if (item.messageBody.reciveIdentity.indexOf(idCard) != -1) {
+                item.messageBody["iCanSee"] = true;
+              } else {
+                item.messageBody["iCanSee"] = false;
+              }
+            }
+          }
+          if (item.messageType == 6) {
+            if (item.messageBody.messagePostIdentity) {
+              if (item.messageBody.messagePostIdentity.indexOf(idCard) != -1) {
+                item.messageBody["isHasMe"] = true;
+              } else {
+                item.messageBody["isHasMe"] = false;
+              }
+            } else {
+              item.messageBody["isHasMe"] = true;
+            }
+          }
+          //送达
+          if (item.messageType == 8) {
+            if (item.messageBody.receiverIdentityId) {
+              if (item.messageBody.receiverIdentityId.indexOf(idCard) != -1) {
+                item.messageBody["iCanSee"] = true;
+              } else {
+                item.messageBody["iCanSee"] = true;
+              }
+            } else {
+              item.messageBody["iCanSee"] = true;
+            }
+          }
+          // 私信
+          if (item.isPersonalMsg == 1) {
+            if (item.messageBody.sendPeopleIndentityId) {
+              if (
+                item.messageBody.sendPeopleIndentityId.indexOf(idCard) != -1
+              ) {
+                item.messageBody["isHasMe"] = true;
+              } else {
+                item.messageBody["isHasMe"] = false;
+              }
+            }
+          }
+        });
+        _this.newsList = messageModels;
+      });
     }
   },
   mounted() {
@@ -152,7 +271,8 @@ export default {
         }
 
         .message_body {
-          margin-right: 15px;
+          // margin-right: 15px;
+          margin-right: 65px;
           margin-left: 0;
           .content {
             background-color: #d9f4fe;

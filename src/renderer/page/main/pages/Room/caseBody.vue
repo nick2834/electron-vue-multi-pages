@@ -22,20 +22,38 @@
         </ul>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="24">当事人送达地址</el-col>
-    </el-row>
-    <el-col>
-      <el-col :span="24">
-        <ul>
-          <li class="liti__content" v-for="(item,index) in litigantList" :key="index">
-            <span class="w2">{{item.litiTitle}}</span>
-            <span class="w4">{{item.name}}</span>
-            <div class="w100" style="color:#12b7f5;"><span style="color:#777777;">地址：</span>{{item.address}}</div>
-          </li>
-        </ul>
+    <template v-if="isJudge">
+      <el-row>
+        <el-col :span="24">当事人送达地址</el-col>
+      </el-row>
+      <el-col>
+        <el-col :span="24">
+          <ul>
+            <li class="liti__content" v-for="(item,index) in litigantList" :key="index">
+              <span class="w2">{{item.litiTitle}}</span>
+              <span class="w4">{{item.name}}</span>
+              <div class="w100" style="color:#12b7f5;">
+                <span style="color:#777777;">地址：</span>
+                {{item.address}}
+              </div>
+            </li>
+          </ul>
+        </el-col>
       </el-col>
-    </el-col>
+    </template>
+    <template v-else>
+      <el-row>
+        <el-col :span="24">我的送达地址</el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <div class="w100" style="color:#12b7f5;">
+            <span style="color:#777777;">地址：</span>
+            {{address}}
+          </div>
+        </el-col>
+      </el-row>
+    </template>
   </div>
 </template>
 
@@ -45,12 +63,23 @@ export default {
     litigantList: {
       type: Array,
       required: true
+    },
+    address: {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
       activeName2: 0
     };
+  },
+  computed: {
+    isJudge: {
+      get() {
+        return this.$store.state.user.isJudge;
+      }
+    }
   }
 };
 </script>

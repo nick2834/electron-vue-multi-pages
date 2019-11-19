@@ -6,7 +6,11 @@ import {
     unreadMessageCount,
     caseList,
     caseInfo,
+    updateMsg,
+    UnreadCasesList,
     allRelevant,
+    Group,
+    deliveryAddress,
     historyMsg
 } from "./api";
 
@@ -25,6 +29,18 @@ export const infoByCaseId = data => {
 }
 export const getAllRelevant = data => {
     return http.post(allRelevant, data, {})
+}
+export const CreateGroup = data => {
+    return http.post(Group, data, {})
+}
+export const getAddress = data => {
+    return http.post(deliveryAddress, data, {})
+}
+export const getUpdateMsg = data => {
+    return http.post(updateMsg, data, {})
+}
+export const getUnreadCaseList = data => {
+    return http.post(UnreadCasesList, data, {})
 }
 export const getHistoryMsg = data => {
     return http.post(historyMsg, data, {})

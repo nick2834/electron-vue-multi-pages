@@ -9,13 +9,17 @@
         <span class="toggle_span" :style="{left:isOpen?'0':'-10px'}" @click="isOpen = !isOpen">
           <i :class="isOpen ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
         </span>
-        <div class="message_detail">
+        <div
+          class="message_detail"
+          v-loading="detailLoading"
+          element-loading-background="rgb(255, 255, 255)"
+        >
           <el-tabs v-model="activeName" class="message_tab">
             <el-tab-pane label="基本信息" name="base">
               <a-base-info v-if="caseInfo" :caseInfo="caseInfo"></a-base-info>
             </el-tab-pane>
             <el-tab-pane label="案件主体" name="body">
-              <a-case-body v-if="litigantList" :litigantList="litigantList"></a-case-body>
+              <a-case-body v-if="litigantList" :litigantList="litigantList" :address="address"></a-case-body>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -39,9 +43,11 @@ export default {
   data() {
     return {
       isOpen: true,
+      detailLoading: false,
       activeName: "base",
       caseInfo: null,
-      litigantList: []
+      litigantList: [],
+      address: ""
     };
   },
   components: {
@@ -52,6 +58,11 @@ export default {
     ACaseBody
   },
   computed: {
+    role: {
+      get() {
+        return this.$store.state.user.role;
+      }
+    },
     caseId: {
       get() {
         return this.$store.state.cases.caseId;
@@ -66,10 +77,12 @@ export default {
   methods: {
     getInfoByCaseId() {
       let _this = this;
+      _this.detailLoading = true;
       infoByCaseId({
         moduleId: "tc-infoByCaseId",
         caseId: this.caseId
       }).then(({ data }) => {
+        _this.detailLoading = false;
         this.caseInfo = data.data;
         let agents = uniqeByKeys(data.data.agents, ["identityId", "name"]);
         let litigants = uniqeByKeys(data.data.litigants, [
@@ -166,7 +179,11 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$route);
     if (this.caseId == "") return;
+    if (this.$route.params) {
+      this.address = this.$route.params.address;
+    }
     this.getInfoByCaseId();
   }
 };
@@ -193,9 +210,13 @@ export default {
     transform: translateY(-50%);
     line-height: 35px;
     cursor: pointer;
+    z-index: 2;
     &:hover {
       background: #12b7f5;
     }
+  }
+  .message_detail {
+    position: relative;
   }
   .message_tab {
     padding: 0 15px;

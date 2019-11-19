@@ -1,11 +1,16 @@
-import { getUnreadMessage, selectMyCaseList } from '@/service'
+import {
+    getUnreadMessage,
+    selectMyCaseList,
+    getAddress
+} from '@/service'
 import user from './user';
-const { state } = user
 export default {
     namespaced: true,
     state: {
         msgCount: 0,
-        caseId: ""
+        caseId: "",
+        groupId: "",
+        roomId: ""
     },
     mutations: {
         updateMsgCount(state, count) {
@@ -14,9 +19,15 @@ export default {
         updateCaseid(state, caseId) {
             state.caseId = caseId
         },
-        clearCaseid(state,caseId){
+        clearCaseid(state, caseId) {
             state.caseId = caseId
-        }
+        },
+        updateGroupId(state, groupId) {
+            state.groupId = groupId
+        },
+        updateRoomId(state, roomId) {
+            state.roomId = roomId
+        },
     },
     actions: {
         //获取未读消息数
@@ -26,9 +37,9 @@ export default {
             return new Promise((resolve, reject) => {
                 getUnreadMessage({
                     moduleId: "tc-selectUnreadMessage",
-                    role: state.role,
-                    identityId: state.userInfo.identityId,
-                    openid: state.userInfo.openid
+                    role: user.state.role,
+                    identityId: user.state.userInfo.identityId,
+                    openid: user.state.userInfo.openid
                 }).then(({
                     data
                 }) => {
@@ -41,17 +52,17 @@ export default {
             })
         },
         //获取案件列表
-        selectMyCaseList({ }, data) {
+        selectMyCaseList({}, data) {
             return new Promise((resolve, reject) => {
                 selectMyCaseList({
                     moduleId: "tc-case/list",
-                    role: state.role,
+                    role: user.state.role,
                     pageNum: data.pageNum,
                     pageSize: 15,
                     status: data.status,
                     sorter: "updateTime_ascend",
                     keyword: data.keyword,
-                    openid: state.userInfo.openid
+                    openid: user.state.userInfo.openid
                 }).then(({
                     data
                 }) => {
@@ -61,5 +72,22 @@ export default {
                 })
             })
         },
+        //送达地址
+        getDeliveryAddress({
+            state
+        }) {
+            return new Promise((resolve, reject) => {
+                getAddress({
+                    moduleId: "tc-getDeliveryAddress",
+                    caseId: state.caseId,
+                    identityId: user.state.userInfo.identityId,
+                    role: user.state.role
+                }).then(({data}) => {
+                    resolve(data)
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        }
     }
 }

@@ -82,6 +82,14 @@ export default {
       set(val) {
         this.$store.commit("cases/clearCaseid", val);
       }
+    },
+    newsList: {
+      get() {
+        return this.$store.state.tencentIm.newsList;
+      },
+      set(val) {
+        this.$store.commit("tencentIm/updateNewsList", val);
+      }
     }
   },
   components: { closeBar },
@@ -94,9 +102,11 @@ export default {
         item => item.name != this.defauleRoleName
       );
       this.caseId = "";
+      this.newsList = "";
       this.show = false;
     },
     handleSelect(key, keyPath) {
+      this.newsList = "";
       if (key != "wechat") this.$store.commit("cases/clearCaseid", "");
     }
   },

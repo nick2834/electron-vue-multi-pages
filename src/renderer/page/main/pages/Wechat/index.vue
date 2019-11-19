@@ -54,5 +54,6 @@ export default {
 <style scoped lang="scss">
 .wechat_contaner {
   padding: 0;
+  position: relative;
 }
 </style>
