@@ -74,9 +74,9 @@ export default {
         updateMsgCount(state, msgCount) {
             state.msgCount = msgCount;
         },
-        updateNewsList(state, newsList) {
-            console.error('tencentIm', newsList)
-            state.newsList = newsList
+        updateNewsList(state, value) {
+            let newsList = state.newsList;
+            state.newsList = value.concat(newsList);
         },
         //获取案件聊天记录
         updateMessage(state, value) {

@@ -8,7 +8,7 @@
         <el-radio-button label="8">文书</el-radio-button>
       </el-radio-group>
     </div>
-    <ul class="message_list infinite-list" v-infinite-scroll="load">
+    <ul class="message_list infinite-list" ref="list" @scroll="onScroll">
       <li class="message_item infinite-list-item" v-for="(item,index) in newsList" :key="index">
         <div
           class="message_main"
@@ -32,7 +32,6 @@ import { getHistoryMsg, getAllRelevant } from "@/service";
 export default {
   data() {
     return {
-      newsLists: 0,
       memRelevantVos: [],
       messageType: 0,
       totalPage: 0,
@@ -70,8 +69,14 @@ export default {
     }
   },
   methods: {
-    load() {
-      this.newsLists += 2;
+    onScroll(e) {
+      let srcElement = e.srcElement;
+      let idCard = this.userInfo.identityId;
+      if (srcElement.scrollTop == 0) {
+        if (this.currentPage == this.totalPage) return;
+        ++this.currentPage;
+        this.getHistoryMessage(idCard);
+      }
     },
     getAllrelevants() {
       let idCard = this.userInfo ? this.userInfo.identityId : null;
@@ -122,7 +127,6 @@ export default {
         identityId: idCard,
         groupId: _this.groupId
       }).then(({ data }) => {
-        console.log(data);
         let messageModels = data.data.messageModels.reverse();
         _this.totalPage = data.data.totalPage;
         _this.currentPage = data.data.currentPage;

@@ -16,3 +16,5 @@ thumbs.db
 
 # package-lock.json
 package-lock.json
+/src/renderer/page/main/store/modules/user.js
+/src/renderer/utils/httpRequest.js
