@@ -9,6 +9,7 @@ export default {
     state: {
         msgCount: 0,
         caseId: "",
+        caseNo: "",
         groupId: "",
         roomId: ""
     },
@@ -18,6 +19,9 @@ export default {
         },
         updateCaseid(state, caseId) {
             state.caseId = caseId
+        },
+        updateCaseno(state, caseNo) {
+            state.caseNo = caseNo
         },
         clearCaseid(state, caseId) {
             state.caseId = caseId
@@ -82,7 +86,9 @@ export default {
                     caseId: state.caseId,
                     identityId: user.state.userInfo.identityId,
                     role: user.state.role
-                }).then(({data}) => {
+                }).then(({
+                    data
+                }) => {
                     resolve(data)
                 }).catch(err => {
                     reject(err)

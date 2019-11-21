@@ -7,7 +7,7 @@ export default {
       role: "1,2,3,4",
       identityId: "",
       signPic: "",
-      nickName: "",
+      nickName: "徐咏",
       avatar: "static/images/UserAvatar.jpg",
       openid: ""
     },

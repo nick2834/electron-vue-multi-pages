@@ -12,7 +12,6 @@
             class="avatar"
             width="36"
             height="36"
-            alt
           />
           <img v-else src="~@/assets/images/avatar.png" class="avatar" width="36" height="36" alt />
           <div class="message_body">
@@ -34,11 +33,7 @@ export default {
       newsList: 0
     };
   },
-  methods: {
-    load() {
-      this.newsList += 2;
-    }
-  }
+  methods: {}
 };
 </script>
 

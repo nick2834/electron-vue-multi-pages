@@ -108,6 +108,14 @@ export default {
       set(val) {
         this.$store.commit("tencentIm/updateNewsList", val);
       }
+    },
+    caseNo: {
+      get() {
+        return this.$store.state.cases.caseNo;
+      },
+      set(val) {
+        this.$store.commit("cases/updateCaseno", val);
+      }
     }
   },
   components: { placeholder },
@@ -122,11 +130,13 @@ export default {
       this.pageNum = 1;
       this.status = e == 0 ? 2 : 1;
       this.caseId = "";
+      this.caseNo = "";
       this.selectMyCaseList(true);
     },
     selectCase(item) {
       this.caseId = item.caseId;
-      this.newsList = "";
+      this.caseNo = item.caseNo;
+      this.newsList = [];
       this.$router.push({ name: "wechat" }); //组织页面二次跳转
       this.$nextTick(() => {
         if (this.role != 3 && this.role != 4) {

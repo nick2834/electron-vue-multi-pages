@@ -2,7 +2,7 @@
   <el-container class="message_container">
     <template v-if="caseId != ''">
       <el-main class="message_content">
-        <a-message-content></a-message-content>
+        <a-message-content :caseId="caseId" :caseNo="caseNo"></a-message-content>
         <a-message-input></a-message-input>
       </el-main>
       <el-aside :width="isOpen ? '240px':'0'" class="online_container">
@@ -66,6 +66,11 @@ export default {
     caseId: {
       get() {
         return this.$store.state.cases.caseId;
+      }
+    },
+    caseNo: {
+      get() {
+        return this.$store.state.cases.caseNo;
       }
     }
   },
@@ -179,7 +184,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route);
     if (this.caseId == "") return;
     if (this.$route.params) {
       this.address = this.$route.params.address;

@@ -7,11 +7,7 @@ Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 const router = new Router({
-  routes: [{
-      path: '/',
-      redirect: '/wechat',
-      hidden: true
-    },
+  routes: [
     {
       path: '/setup',
       name: 'setup',
@@ -65,6 +61,14 @@ const router = new Router({
       meta: {
         title: "收藏",
         role: '3,2,1'
+      }
+    },
+    {
+      path: '/modal',
+      name: 'modal',
+      component: require('../pages/Modal').default,
+      meta: {
+        title: "模态框"
       }
     },
     {

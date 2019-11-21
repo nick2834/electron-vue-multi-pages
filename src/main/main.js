@@ -2,9 +2,12 @@ import {
   BrowserWindow,
   ipcMain
 } from 'electron';
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-let mainWin = null;
-const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/main/#wechat' : `file://${__dirname}/main/index.html/#wechat`;
+import {
+  mainURL
+} from './urlConfig'
+import './config';
+let mainWin = null,
+  modalWin = null;
 
 function createMainWindow() {
   mainWin = new BrowserWindow({
@@ -21,22 +24,23 @@ function createMainWindow() {
       webSecurity: false
     }
   });
-  mainWin.loadURL(winURL);
+  mainWin.loadURL(mainURL);
   // 监听渲染完成
+  // mainWin.closeDevTools();
   mainWin.once('ready-to-show', () => {
-    mainWin.center()
-    mainWin.show();
+    // mainWin.center()
   });
   // 监听窗口关闭
   mainWin.on('close', () => {
     mainWin = null;
   });
+  require('./modal');
 
-  global.appData = { 
-    Authorization: ""
+  global.appData = {
+    Authorization: "",
+    isClosed: true
   };
 }
-
 /**
  * 监听创建新窗口
  */
@@ -51,7 +55,6 @@ ipcMain.on('showMainWindow', (event, arg) => {
     createMainWindow();
   }
 });
-
 /**
  * 监听隐藏新窗口
  */
@@ -60,7 +63,6 @@ ipcMain.on('hideMainWindow', () => {
     mainWin.hide();
   }
 });
-
 
 ipcMain.on('mian_min', e => mainWin.minimize());
 ipcMain.on('mian_max', e => {

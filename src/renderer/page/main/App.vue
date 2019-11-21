@@ -1,6 +1,6 @@
 <template>
   <el-container id="app">
-    <el-header style="height:55px">
+    <el-header style="height:55px" v-if="$route.path != '/modal'">
       <a-header></a-header>
     </el-header>
     <router-view></router-view>
@@ -24,9 +24,22 @@ export default {
       get() {
         return this.$store.state.user.userInfo;
       }
+    },
+    caseId: {
+      get() {
+        return this.$store.state.cases.caseId;
+      }
     }
   },
   components: { AHeader },
+  watch: {
+    caseId(val) {
+      if (val == "") {
+        // this.$electron.ipcRenderer.send("modal_close");
+        console.log(this.$electron.ipcRenderer)
+      }
+    }
+  },
   created() {
     var token = this.$electron.remote.getGlobal("appData").Authorization;
     sessionStorage.Authorization = token;

@@ -5,20 +5,53 @@
       <i class="el-icon-picture-outline"></i>
       <i class="el-icon-files"></i>
       <i class="el-icon-receiving"></i>
-      <i class="el-icon-set-up" @click="drawer = true"></i>
+      <i class="el-icon-set-up" @click="handleShowModal"></i>
     </div>
-    <textarea name id cols="30" rows="10" class="input_area"></textarea>
-    <el-drawer title="我是标题" :visible.sync="drawer" direction="rtl" :modal="false" size="40%" class="message_drawer">
-      <span>我来啦!</span>
-    </el-drawer>
+    <div class="func-area" v-if="drawer">
+      <ul class="func-area__content">
+        <li v-for="(item, index) in count" :key="index" class="func-area__item">
+          <span class="el-icon el-icon-chat-round"></span>
+          <div class="title">功能按钮</div>
+        </li>
+      </ul>
+    </div>
+    <textarea name id cols="30" rows="10" class="input_area" placeholder="请在此输入内容" v-else></textarea>
+    <div class="send" @click="send" v-if="!drawer">
+      <span>发送(ent)</span>
+    </div>
+    <a-drag-modal :showWin.sync="showWin" :width="600" :height="400">
+      <div slot="title">标题</div>
+      <div slot="content">按住头部可拖拽、右下角放大缩小、可最大化</div>
+    </a-drag-modal>
   </div>
 </template>
 
 <script>
+import ADragModal from "@/components/AdragModal";
+const { ipcRenderer } = require("electron");
 export default {
   data() {
-    return { drawer: false };
-  }
+    return { drawer: false, count: 10, showWin: false };
+  },
+  computed: {
+    caseNo: {
+      get() {
+        return this.$store.state.cases.caseNo;
+      }
+    }
+  },
+  components: { ADragModal },
+  methods: {
+    send() {},
+    handleShowModal() {
+      this.showWin = !this.dialogVisible;
+      // ipcRenderer.send("showModalWindow");
+      // this.$nextTick(() => {
+      //   localStorage.caseNo = this.caseNo;
+      // });
+    }
+  },
+  mounted() {}
 };
 </script>
 
@@ -26,6 +59,7 @@ export default {
 .message_input {
   border-top: 1px solid $borderColor;
   height: 200px;
+  position: relative;
   .input_tool {
     height: 40px;
     line-height: 40px;
@@ -40,15 +74,68 @@ export default {
       }
     }
   }
-  .input_area {
+  .func-area {
+    background: #ffffff;
+    &__content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    &__item {
+      margin-right: 10px;
+      span.el-icon {
+        background: #f3f3f3;
+        border-radius: 10px;
+        text-align: center;
+        color: #888a92;
+        border: 1px solid #f3f3f3;
+        line-height: 50px;
+        cursor: pointer;
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+      }
+      .title {
+        text-align: center;
+        font-size: 12px;
+      }
+      &:hover {
+        color: #12b7f5;
+      }
+    }
+  }
+  .input_area,
+  .func-area {
     padding: 10px;
     height: 160px;
+    box-sizing: border-box;
     width: 100%;
     border: none;
     outline: none;
     font-family: "Micrsofot Yahei";
     resize: none;
     font-size: 16px;
+  }
+  .send {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    width: 75px;
+    height: 28px;
+    line-height: 28px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #12b7f5;
+    border-radius: 3px;
+    background: #12b7f5;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+      background: #12b7f5;
+      color: #fff;
+    }
   }
 }
 </style>

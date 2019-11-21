@@ -102,11 +102,11 @@ export default {
         item => item.name != this.defauleRoleName
       );
       this.caseId = "";
-      this.newsList = "";
+      this.newsList = [];
       this.show = false;
     },
     handleSelect(key, keyPath) {
-      this.newsList = "";
+      this.newsList = [];
       if (key != "wechat") this.$store.commit("cases/clearCaseid", "");
     }
   },

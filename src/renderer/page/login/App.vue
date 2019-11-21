@@ -49,6 +49,7 @@
 
 <script>
 import closeBar from "@/components/closeBar";
+// const {remote,electron} = 'electron'
 export default {
   name: "App",
   components: {

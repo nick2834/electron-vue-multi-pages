@@ -4,14 +4,14 @@ import {
     ipcMain,
     BrowserWindow,
 } from 'electron' // eslint-disable-line
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+import {
+    loginURL
+} from './urlConfig'
+import './config';
 if (process.env.NODE_ENV !== 'development') {
     global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
-} 
+}
 let loginWindow;
-const winURL = process.env.NODE_ENV === 'development' ?
-    'http://localhost:9080/login' :
-    `file://${__dirname}/login/index.html`;
 
 function createLoginWindow() {
     loginWindow = new BrowserWindow({
@@ -31,8 +31,9 @@ function createLoginWindow() {
         titleBarStyle: "hidden",
         autoHideMenuBar: true
     });
-    loginWindow.openDevTools() // 开发者工具
-    loginWindow.loadURL(winURL);
+    // loginWindow.openDevTools() // 开发者工具
+    loginWindow.closeDevTools();
+    loginWindow.loadURL(loginURL);
     loginWindow.once('ready-to-show', () => {
         loginWindow.show();
     });
@@ -44,10 +45,6 @@ function createLoginWindow() {
     });
     // 引入main.js，负责悬浮窗口内主进程和渲染进程之间的通信
     require('./main');
-    global.appData = {
-        // userInfo: null,
-        Authorization: ""
-    };
 }
 
 app.on('ready', createLoginWindow);
@@ -70,7 +67,5 @@ ipcMain.on('hideLoginWindow', (e) => {
 })
 
 ipcMain.on('showLoginWindow', (e) => {
-    // loginWindow.loadURL(winURL)
-    loginWindow.setContentSize(500, 323)
     loginWindow.show()
 })
