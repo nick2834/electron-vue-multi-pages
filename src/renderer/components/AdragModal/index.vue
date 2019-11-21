@@ -1,38 +1,42 @@
 <!-- 拖拽窗 -->
 <template>
-  <div
-    class="dialog_container"
-    v-show="showWin"
-    @mousedown="down"
-    @mouseup="up"
-    @mousemove="move"
-    ref="dialogArea"
-  >
+  <transition name="dialog">
     <div
-      class="dialog"
-      ref="dialog"
-      :style="{top:top + 'px',left:left + 'px',width:curWidth + 'px',height:curHeight+ 'px'}"
+      class="dialog_container"
+      draggable="true"
+      v-show="showWin"
+      @mousedown="down"
+      @mouseup="up"
+      @mousemove="move"
+      ref="dialogArea"
     >
-      <div class="title-wrap no__dragable">
-        <slot name="title">标题</slot>
-        <div class="title" data-type="move"></div>
-        <div class="btn_group">
-          <span class="btn_icon el-icon-minus"></span>
-          <span
-            class="btn_icon"
-            :class="max ?'el-icon-copy-document' :'el-icon-full-screen'"
-            @click="maxWin"
-          ></span>
-          <span class="btn_icon el-icon-close"></span>
+      <div
+        class="dialog"
+        ref="dialog"
+        :style="{top:top + 'px',left:left + 'px',width:curWidth + 'px',height:curHeight+ 'px'}"
+      >
+        <div class="title-wrap" :class="max ? 'dragable':'no__dragable'">
+          <slot name="title">标题</slot>
+          <div class="title" data-type="move"></div>
+          <div class="btn_group no__dragable">
+            <span class="btn_icon el-icon-minus"></span>
+            <span
+              class="btn_icon"
+              :class="max ?'el-icon-copy-document' :'el-icon-full-screen'"
+              @click="maxWin"
+            ></span>
+            <span class="btn_icon el-icon-close" @click="closeModal"></span>
+          </div>
         </div>
-      </div>
-      <div class="content-wrap">
-        <div class="content">
-          <slot name="content" />
+        <div class="content-wrap">
+          <div class="content" draggable="false">
+            <slot name="content" />
+            <div class="resize" data-type="resize"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -134,6 +138,9 @@ export default {
         this.left = this.Oleft;
       }
     },
+    closeModal() {
+      this.$emit("update:showWin", false);
+    },
     initSize() {
       var refs = this.$refs;
       var top = (document.documentElement.clientHeight - this.height) / 2;
@@ -157,22 +164,28 @@ export default {
   height: 100%;
   z-index: 999;
   .dialog {
-    min-width: 240px;
+    min-width: 400px;
+    min-height: 300px;
     background: white;
     position: absolute;
     margin: 0 auto;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
     .title-wrap {
       width: 100%;
       height: 40px;
       line-height: 40px;
       padding: 0 80px 0 15px;
-      background: #e7e8e8;
+      background: $defaultColor;
+      color: #ffffff;
       position: absolute;
       top: 0;
       left: 0;
       box-sizing: border-box;
       display: flex;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.3);
       .title {
         width: calc(100% - 80px);
         height: 100%;
@@ -197,21 +210,45 @@ export default {
           padding: 5px;
           cursor: pointer;
           &:hover {
-            color: #12b7f5;
+            color: #909399;
           }
         }
       }
     }
     .content-wrap {
-      padding: 60px 15px;
+      padding: 55px 15px 15px 15px;
       height: 100%;
       box-sizing: border-box;
       .content {
         height: 100%;
         box-sizing: border-box;
         overflow: auto;
+        .resize {
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          bottom: -10px;
+          right: -10px;
+          cursor: nw-resize;
+        }
       }
     }
   }
+}
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: all 0.2s;
+}
+.dialog-enter-active .dialog,
+.dialog-leave-active .dialog {
+  transition: all 0.2s;
+}
+.dialog-enter .dialog,
+.dialog-leave-to .dialog {
+  transform: scale3d(0.1, 0.1, 0.1);
+}
+.dialog-enter,
+.dialog-leave-to {
+  opacity: 0;
 }
 </style>

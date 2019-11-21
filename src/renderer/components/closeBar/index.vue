@@ -2,6 +2,9 @@
 <template>
   <div class="close_bar dragable">
     <div class="btn__group no__dragable">
+      <el-badge :value="1" class="item">
+        <span class="icon_btn base__color el-icon-suitcase" v-if="caseId != ''"></span>
+      </el-badge>
       <span
         v-if="$route.path != '/login'"
         class="icon_btn icon_minus el-icon-setting"
@@ -28,6 +31,13 @@ export default {
     return {
       ipc: this.$electron.ipcRenderer
     };
+  },
+  computed: {
+    caseId: {
+      get() {
+        return this.$store.state.cases.caseId;
+      }
+    }
   },
   methods: {
     minusClick() {

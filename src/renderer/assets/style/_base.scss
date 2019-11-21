@@ -1,4 +1,5 @@
 $borderColor: #f6f7f9;
+$defaultColor: #12b7f5;
 .el-header {
   // background-color: #e9e7e8;
   background-color: #e7e8e8;
@@ -46,26 +47,26 @@ $borderColor: #f6f7f9;
 }
 
 // drawer
-.message_drawer{
+.message_drawer {
   top: 55px;
-  .el-drawer{
+  .el-drawer {
     box-shadow: unset;
     border-left: 1px solid $borderColor;
   }
 }
 
 // 案件详情
-.detail_content{
-  .el-form-item{
+.detail_content {
+  .el-form-item {
     margin-bottom: 15px;
     color: #777777;
   }
-  .el-form-item__label{
+  .el-form-item__label {
     padding: 0 !important;
     line-height: 25px;
     font-size: 12px;
   }
-  .el-form-item__content{
+  .el-form-item__content {
     line-height: 25px;
     font-size: 12px;
   }
