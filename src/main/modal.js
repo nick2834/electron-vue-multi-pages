@@ -10,6 +10,7 @@ let modalWin = null;
 
 function createModalWindow() {
     modalWin = new BrowserWindow({
+        id: "modal",
         height: 622,
         width: 800,
         frame: false,
@@ -40,10 +41,14 @@ function createModalWindow() {
 ipcMain.on('showModalWindow', (event, arg) => {
     // 判断是否存在实例   modalWin
     // 判断是否关闭 modalWin.isClosable()
-    if (modalWin) {
-        if (modalWin.isVisible()) {
-            createModalWindow();
-            // modalWin.show()
+    if (modalWin) { //是否被销毁
+        if (modalWin.isVisible()) { //是否可见
+            if (!modalWin.isFocused()) { //是否聚焦
+                modalWin.showInactive();
+                event.sender.send('isOpen',1)
+            } else {
+                createModalWindow();
+            }
         } else {
             modalWin.showInactive();
         }

@@ -9,7 +9,11 @@
           </slot>
           <div class="btn_group no__dragable">
             <span class="btn_icon el-icon-minus"></span>
-            <span class="btn_icon btn-max el-icon-full-screen"></span>
+            <span
+              class="btn_icon"
+              :class="max ?'el-icon-copy-document' :'el-icon-full-screen'"
+              @click="maxWin"
+            ></span>
             <span class="btn_icon el-icon-close" @click="closeModal"></span>
           </div>
         </div>
@@ -60,6 +64,54 @@ export default {
     };
   },
   methods: {
+    up(e) {
+      this.canMove = false;
+      this.canResize = false;
+      if (e.target.dataset.type == "move") {
+        this.setTandL(e);
+      } else if (e.target.dataset.type == "resize") {
+        this.setWandH(e);
+      }
+    },
+    down(e) {
+      e.preventDefault();
+      if (this.max) {
+        return;
+      }
+      if (e.target.dataset.type == "move") {
+        this.setXandY(e);
+        this.setTandL(e);
+        this.canMove = true;
+      } else if (e.target.dataset.type == "resize") {
+        this.setXandY(e);
+        this.setWandH(e);
+        this.canResize = true;
+      }
+    },
+    move(e) {
+      e.preventDefault();
+      if (this.canMove) {
+        this.left = e.pageX - this.startX + this.Oleft;
+        this.top = e.pageY - this.startY + this.Otop;
+      } else if (this.canResize) {
+        var w = e.pageX - this.startX + this.Owidth;
+        var h = e.pageY - this.startY + this.Oheight;
+        this.curWidth = w < this.minWidth ? this.minWidth : w;
+        this.curHeight = h < this.minHeight ? this.minHeight : h;
+      }
+    },
+    setXandY(e) {
+      this.startX = e.pageX;
+      this.startY = e.pageY;
+    },
+    setTandL(e) {
+      this.Otop = this.$refs.dialog.offsetTop;
+      this.Oleft = this.$refs.dialog.offsetLeft;
+    },
+    setWandH(e) {
+      this.Owidth = this.$refs.dialog.offsetWidth;
+      this.Oheight = this.$refs.dialog.offsetHeight;
+    },
     maxWin() {
       this.max = !this.max;
       if (this.max) {
@@ -78,9 +130,18 @@ export default {
     },
     closeModal() {
       this.$emit("update:showWin", false);
+    },
+    initSize() {
+      var refs = this.$refs;
+      var top = (document.documentElement.clientHeight - this.height) / 2;
+      var left = (document.documentElement.clientWidth - this.width) / 2;
+      this.top = this.Otop = top;
+      this.left = this.Oleft = left;
     }
   },
-  mounted() {}
+  mounted() {
+    this.initSize();
+  }
 };
 </script>
 <style scoped lang="scss">

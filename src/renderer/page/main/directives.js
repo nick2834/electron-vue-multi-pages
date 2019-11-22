@@ -5,6 +5,11 @@ Vue.directive('dialogDrag', {
     bind(el, binding, vnode, oldVnode) {
         const dialogHeaderEl = el.querySelector('.el-dialog__header');
         const dragDom = el.querySelector('.el-dialog');
+        const btnGroup = el.querySelector('.btn_group');
+        const minimizeBtn = el.querySelector('.el-icon-minus') || null;
+        const maxBtn = el.querySelector('.el-icon-full-screen') || null;
+        const resizeBtn = el.querySelector('.el-icon-copy-document') || null
+        var defaultStyle = {}
         dialogHeaderEl.style.cursor = 'move';
 
         // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
@@ -45,6 +50,27 @@ Vue.directive('dialogDrag', {
                 document.onmouseup = null;
             };
         }
+
+        minimizeBtn.onclick = (e) => {
+            console.log(e)
+        }
+        maxBtn.onclick = (e) => {
+            e.stopPropagation();
+            var docItem = document.createElement('span');
+            docItem.className = 'btn_icon el-icon-copy-document'
+            console.log(docItem)
+            dragDom.style = "left: 0px; top: 0px; width: 100%; height: 100%; transform: unset;";
+            btnGroup.removeChild(maxBtn)
+            btnGroup.insertBefore(docItem,el.querySelector('.el-icon-close'))
+            // maxBtn.classList.remove('el-icon-full-screen')
+            // maxBtn.classList.add('el-icon-copy-document')
+        }
+        if (resizeBtn) {
+            resizeBtn.onclick = (e) => {
+                e.stopPropagation();
+            }
+        }
+
     }
 })
 

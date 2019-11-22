@@ -10,14 +10,18 @@
         </div>
       </div>
     </el-header>
+    <span>{{count}}</span>
   </el-container>
 </template>
 
 <script>
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, remote } = require("electron");
+var timer = null;
 export default {
   data() {
-    return {};
+    return {
+      count: 0
+    };
   },
   computed: {
     caseNo: {
@@ -26,9 +30,9 @@ export default {
       }
     }
   },
-  watch:{
-    caseNo(val){
-      console.log(val)
+  watch: {
+    caseNo(val) {
+      console.log(val);
     }
   },
   methods: {
@@ -37,10 +41,18 @@ export default {
     },
     closeClick() {
       ipcRenderer.send("modal_close");
+      // clearInterval(timer)
+      // timer = null;
+    },
+    handleTime() {
+      timer = setInterval(() => {
+        this.count++;
+        // console.log(remote.getCurrentWindow().id) //3
+      }, 1000);
     }
   },
-  mounted(){
-    console.log(this.caseNo)
+  mounted() {
+    this.handleTime();
   }
 };
 </script>
