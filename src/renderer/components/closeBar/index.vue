@@ -2,12 +2,14 @@
 <template>
   <div class="close_bar dragable">
     <div class="btn__group no__dragable">
-      <span
-        v-if="$route.path != '/login'"
-        class="icon_btn icon_minus el-icon-setting"
-        :class="$route.path != '/login' ? 'base__color' :''"
-        @click="logout"
-      ></span>
+      <el-dropdown trigger="click">
+        <span class="icon_btn base__color icon_minus el-icon-setting el-dropdown-link"></span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item @click.native="handleLogout">注销</el-dropdown-item>
+          <el-dropdown-item @click.native="handleClose">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
       <span
         class="icon_btn icon_minus el-icon-minus"
         :class="$route.path != '/login' ? 'base__color' :''"
@@ -23,25 +25,29 @@
 </template>
 
 <script>
+import {remote,ipcRenderer} from 'electron'
 export default {
   data() {
     return {
-      ipc: this.$electron.ipcRenderer
+      ipc: ipcRenderer
     };
   },
   methods: {
     minusClick() {
-      this.ipc.send("mian_min");
+      ipcRenderer.send("mian_min");
     },
     closeClick() {
-      this.$electron.remote.getGlobal("appData").userInfo = null;
-      this.ipc.send("mian_close");
+      remote.getGlobal("appData").userInfo = null;
+      ipcRenderer.send("mian_close");
     },
-    logout() {
-      this.$electron.ipcRenderer.send("showLoginWindow");
-      this.$electron.ipcRenderer.send("hideMainWindow");
-      this.$electron.remote.getGlobal("appData").userInfo = null;
+    handleLogout(){
+      ipcRenderer.send("showLoginWindow");
+      ipcRenderer.send("hideMainWindow");
+      remote.getGlobal("appData").userInfo = null;
       this.$store.commit("REMOVE_USER", null);
+    },
+    handleClose(){
+      ipcRenderer.send('close_login')
     }
   },
   mounted() {}

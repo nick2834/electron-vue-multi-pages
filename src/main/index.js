@@ -69,3 +69,7 @@ ipcMain.on('hideLoginWindow', (e) => {
 ipcMain.on('showLoginWindow', (e) => {
     loginWindow.show()
 })
+
+ipcMain.on('close_login',() =>{
+    app.quit()
+})

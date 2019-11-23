@@ -66,7 +66,7 @@ export default {
                     status: data.status,
                     sorter: "updateTime_ascend",
                     keyword: data.keyword,
-                    openid: user.state.userInfo.openid
+                    openid: user.state.openid
                 }).then(({
                     data
                 }) => {

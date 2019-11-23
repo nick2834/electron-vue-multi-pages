@@ -49,7 +49,7 @@
 
 <script>
 import closeBar from "@/components/closeBar";
-// const {remote,electron} = 'electron'
+const { remote, ipcRenderer } = require('electron');
 export default {
   name: "App",
   components: {
@@ -74,7 +74,6 @@ export default {
   methods: {
     submitForm(userForm) {
       let _this = this;
-      let el = _this.$electron;
       _this.loading = true;
       _this.$refs[userForm].validate(valid => {
         if (valid) {
@@ -85,11 +84,12 @@ export default {
               moduleId: "tc-login"
             })
             .then(({ data }) => {
+              console.log(data);
               _this.loading = false;
               let token = data.data.Authorization;
-              el.ipcRenderer.send("showMainWindow");
-              el.ipcRenderer.send("hideLoginWindow");
-              el.remote.getGlobal("appData").Authorization = token;
+              ipcRenderer.send("showMainWindow");
+              ipcRenderer.send("hideLoginWindow");
+              remote.getGlobal("appData").Authorization = token;
             });
           // return;
 

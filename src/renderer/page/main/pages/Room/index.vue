@@ -1,6 +1,10 @@
 <template>
-  <el-container class="message_container">
-    <template v-if="caseId != ''">
+  <el-container
+    class="message_container"
+    v-loading="caseLoading"
+    element-loading-background="rgb(255, 255, 255)"
+  >
+    <template v-if="caseId != '' && !caseLoading">
       <el-main class="message_content">
         <a-message-content :caseId="caseId" :caseNo="caseNo"></a-message-content>
         <a-message-input></a-message-input>
@@ -9,11 +13,7 @@
         <span class="toggle_span" :style="{left:isOpen?'0':'-10px'}" @click="isOpen = !isOpen">
           <i :class="isOpen ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
         </span>
-        <div
-          class="message_detail"
-          v-loading="detailLoading"
-          element-loading-background="rgb(255, 255, 255)"
-        >
+        <div class="message_detail">
           <el-tabs v-model="activeName" class="message_tab">
             <el-tab-pane label="基本信息" name="base">
               <a-base-info v-if="caseInfo" :caseInfo="caseInfo"></a-base-info>
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       isOpen: true,
-      detailLoading: false,
+      caseLoading: true,
       activeName: "base",
       caseInfo: null,
       litigantList: [],
@@ -82,12 +82,12 @@ export default {
   methods: {
     getInfoByCaseId() {
       let _this = this;
-      _this.detailLoading = true;
+      _this.caseLoading = true;
       infoByCaseId({
         moduleId: "tc-infoByCaseId",
         caseId: this.caseId
       }).then(({ data }) => {
-        _this.detailLoading = false;
+        _this.caseLoading = false;
         this.caseInfo = data.data;
         let agents = uniqeByKeys(data.data.agents, ["identityId", "name"]);
         let litigants = uniqeByKeys(data.data.litigants, [
@@ -194,6 +194,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.message_container{
+  height: calc(100vh - 55px);
+}
 .message_content {
   padding: 0;
 }

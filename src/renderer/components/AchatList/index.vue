@@ -202,8 +202,7 @@ export default {
       });
     }
   },
-  mounted() {},
-  created() {
+  mounted() {
     this.selectMyCaseList(true);
   }
 };

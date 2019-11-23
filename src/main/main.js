@@ -1,4 +1,5 @@
 import {
+  app,
   BrowserWindow,
   ipcMain
 } from 'electron';
@@ -6,8 +7,8 @@ import {
   mainURL
 } from './urlConfig'
 import './config';
-let mainWin = null,
-  modalWin = null;
+import './websocket'
+let mainWin = null;
 
 function createMainWindow() {
   mainWin = new BrowserWindow({
@@ -35,7 +36,6 @@ function createMainWindow() {
     mainWin = null;
   });
   require('./modal');
-
   global.appData = {
     Authorization: "",
     isClosed: true
@@ -63,7 +63,9 @@ ipcMain.on('hideMainWindow', () => {
     mainWin.hide();
   }
 });
-
+ipcMain.on('close_login', () => {
+  app.quit()
+})
 ipcMain.on('mian_min', e => mainWin.minimize());
 ipcMain.on('mian_max', e => {
   if (mainWin.isMaximized()) {
@@ -73,3 +75,5 @@ ipcMain.on('mian_max', e => {
   }
 });
 ipcMain.on('mian_close', e => mainWin.close());
+
+

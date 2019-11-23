@@ -4,8 +4,8 @@
     <el-dropdown trigger="click" class="avatar_group" @command="handleCommand">
       <div class="el-dropdown-link">
         <img src="~@/assets/images/avatar.png" class="header_avatar no__dragable" />
-        <span class="user-role__name">
-          <div class="name">{{userInfo.nickName}}</div>
+        <span class="user-role__name" v-if="userInfo">
+          <div class="name">{{userInfo.name}}</div>
           <div class="role">{{defauleRoleName}}</div>
         </span>
       </div>
@@ -43,6 +43,12 @@
 import closeBar from "../closeBar";
 var userRoleArr = [];
 export default {
+  props: {
+    userInfo: {
+      type: Object,
+      default: {}
+    }
+  },
   data() {
     return {
       activeIndex: "1",
@@ -52,11 +58,6 @@ export default {
     };
   },
   computed: {
-    userInfo: {
-      get() {
-        return this.$store.state.user.userInfo;
-      }
-    },
     msgCount: {
       get() {
         return this.$store.state.cases.msgCount;
@@ -108,52 +109,89 @@ export default {
     handleSelect(key, keyPath) {
       this.newsList = [];
       if (key != "wechat") this.$store.commit("cases/clearCaseid", "");
+    },
+    initUserRole(userInfo) {
+      let roles = userInfo && userInfo.role;
+      if (roles.indexOf("4") != -1) {
+        var newRole = roles.split(",");
+        newRole.pop();
+        newRole.unshift("-1");
+        roles = newRole.join(",");
+      }
+      if (roles.indexOf("3") != -1) {
+        userRoleArr.push({
+          id: 0,
+          role: 3,
+          name: "faguan"
+        });
+      }
+      if (roles.indexOf("2") != -1) {
+        userRoleArr.push({
+          id: 1,
+          role: 2,
+          name: "dailiren"
+        });
+      }
+      if (roles.indexOf("1") != -1) {
+        userRoleArr.push({
+          id: 2,
+          role: 1,
+          name: "dangshiren"
+        });
+      }
+      if (roles.indexOf("-1") != -1) {
+        userRoleArr.push({
+          id: 3,
+          role: 4,
+          name: "qitashenfen"
+        });
+      }
+      this.defauleRoleName = userRoleArr[0].name;
+      this.roleList = userRoleArr.filter(
+        item => item.name != this.defauleRoleName
+      );
     }
   },
   mounted() {
-    this.$store.dispatch("cases/getUnreadMessages");
-    console.log(this.$router.options.routes.filter(item => !item.hidden));
-  },
-  created() {
     let roles = this.userInfo && this.userInfo.role;
-    if (roles.indexOf("4") != -1) {
-      var newRole = roles.split(",");
-      newRole.pop();
-      newRole.unshift("-1");
-      roles = newRole.join(",");
-    }
-    if (roles.indexOf("3") != -1) {
-      userRoleArr.push({
-        id: 0,
-        role: 3,
-        name: "faguan"
-      });
-    }
-    if (roles.indexOf("2") != -1) {
-      userRoleArr.push({
-        id: 1,
-        role: 2,
-        name: "dailiren"
-      });
-    }
-    if (roles.indexOf("1") != -1) {
-      userRoleArr.push({
-        id: 2,
-        role: 1,
-        name: "dangshiren"
-      });
-    }
-    if (roles.indexOf("-1") != -1) {
-      userRoleArr.push({
-        id: 3,
-        role: 4,
-        name: "qitashenfen"
-      });
-    }
-    this.defauleRoleName = userRoleArr[0].name;
-    this.roleList = userRoleArr.filter(
-      item => item.name != this.defauleRoleName
-    );
+      if (roles.indexOf("4") != -1) {
+        var newRole = roles.split(",");
+        newRole.pop();
+        newRole.unshift("-1");
+        roles = newRole.join(",");
+      }
+      if (roles.indexOf("3") != -1) {
+        userRoleArr.push({
+          id: 0,
+          role: 3,
+          name: "faguan"
+        });
+      }
+      if (roles.indexOf("2") != -1) {
+        userRoleArr.push({
+          id: 1,
+          role: 2,
+          name: "dailiren"
+        });
+      }
+      if (roles.indexOf("1") != -1) {
+        userRoleArr.push({
+          id: 2,
+          role: 1,
+          name: "dangshiren"
+        });
+      }
+      if (roles.indexOf("-1") != -1) {
+        userRoleArr.push({
+          id: 3,
+          role: 4,
+          name: "qitashenfen"
+        });
+      }
+      this.defauleRoleName = userRoleArr[0].name;
+      this.roleList = userRoleArr.filter(
+        item => item.name != this.defauleRoleName
+      );
   }
 };
 </script>

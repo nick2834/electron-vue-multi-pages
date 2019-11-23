@@ -12,6 +12,7 @@
 </template>
 
 <script>
+const { ipcRenderer, remote, BrowserWindow } = require("electron");
 import AChatList from "@/components/AchatList";
 import ADocdom from "@/components/ADocdom";
 export default {
@@ -24,6 +25,11 @@ export default {
       get() {
         return this.$store.state.cases.caseId;
       }
+    }
+  },
+  watch: {
+    caseId(val) {
+      // console.log(BrowserWindow);
     }
   },
   methods: {

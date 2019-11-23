@@ -2,6 +2,7 @@ import http from '@/utils/httpRequest'
 // import store from "@/store";
 
 import {
+    login,
     getIdentifierSign,
     unreadMessageCount,
     caseList,
@@ -13,6 +14,9 @@ import {
     deliveryAddress,
     historyMsg
 } from "./api";
+export const users = data => {
+    return http.post(login, data, {})
+}
 
 export const getIdentifier = data => {
     return http.post(getIdentifierSign, data, {})

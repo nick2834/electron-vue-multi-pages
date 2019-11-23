@@ -10,30 +10,27 @@
         </div>
       </div>
     </el-header>
-    <span>{{count}}</span>
+    <el-form>
+      <el-form-item>
+        <el-input v-model="value"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submit">发送</el-button>
+      </el-form-item>
+    </el-form>
   </el-container>
 </template>
 
 <script>
 const { ipcRenderer, remote } = require("electron");
-var timer = null;
+import socket from "@/service/websocket";
 export default {
   data() {
     return {
-      count: 0
+      value: "",
+      caseNo: "",
+      ws: null
     };
-  },
-  computed: {
-    caseNo: {
-      get() {
-        return this.$store.state.cases.caseNo;
-      }
-    }
-  },
-  watch: {
-    caseNo(val) {
-      console.log(val);
-    }
   },
   methods: {
     minusClick() {
@@ -41,18 +38,31 @@ export default {
     },
     closeClick() {
       ipcRenderer.send("modal_close");
-      // clearInterval(timer)
-      // timer = null;
     },
-    handleTime() {
-      timer = setInterval(() => {
-        this.count++;
-        // console.log(remote.getCurrentWindow().id) //3
-      }, 1000);
+    submit() {
+      console.log(this.value);
+      this.ws.send(this.value);
+    },
+    initWebSocket() {
+      this.ws = new socket({ url: "ws://127.0.0.1:10086" });
+      this.wsOnmessage();
+    },
+    wsOnmessage() {
+      if (this.ws) {
+        this.ws.onmessage(msg => {
+          console.log(msg);
+        });
+      }
     }
   },
   mounted() {
-    this.handleTime();
+    this.$nextTick(() => {
+      this.initWebSocket();
+    });
+  },
+  beforeDestroy() {
+    this.ws.close();
+    this.ws = null;
   }
 };
 </script>
