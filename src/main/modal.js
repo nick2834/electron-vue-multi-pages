@@ -1,19 +1,20 @@
 import {
     app,
     BrowserWindow,
-    ipcMain
+    ipcMain,
+    remote
 } from 'electron';
 import {
     modalURL
 } from './urlConfig'
 import './config';
 import socket from './ws';
-let ws = new socket({
-    'url': 'ws://127.0.0.1:10086',
-})
 let modalWin = null;
-
-function createModalWindow() {
+let ws = null;
+function createModalWindow(arg) {
+    ws = new socket({
+        'url': `ws://127.0.0.1:10086/${arg.openId}`,
+    })
     modalWin = new BrowserWindow({
         id: "modal",
         height: 622,
@@ -35,6 +36,7 @@ function createModalWindow() {
     modalWin.once('ready-to-show', () => {
         modalWin.show();
         modalWin.center();
+        ws.send(arg)
     });
     // 监听窗口关闭
     modalWin.on('close', (event) => {
@@ -48,8 +50,13 @@ ipcMain.on('close_login', () => {
  * 监听创建新窗口
  */
 ipcMain.on('showModalWindow', (event, arg) => {
+    console.error(arg)
+    // {
+    //     caseNo:"",
+    //     openId:""
+    // }
     //监听ws关闭情况  如果窗口关闭则重连
-    ws.onclose(e => {
+    ws && ws.onclose(e => {
         if (e) {
             ws.onreconnect()
         }
@@ -62,20 +69,14 @@ ipcMain.on('showModalWindow', (event, arg) => {
                 modalWin.showInactive();
                 ws.send(arg)
             } else {
-                createModalWindow();
-                setTimeout(() => {
-                    ws.send(arg)
-                }, 3000);
+                createModalWindow(arg);
             }
         } else {
             modalWin.showInactive();
             ws.send(arg)
         }
     } else {
-        createModalWindow();
-        setTimeout(() => {
-            ws.send(arg)
-        }, 3000);
+        createModalWindow(arg);
     }
 });
 ipcMain.on('modal_close', () => modalWin.close());

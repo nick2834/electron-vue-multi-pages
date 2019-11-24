@@ -44,13 +44,14 @@ export default {
       this.ws.send(this.value);
     },
     initWebSocket() {
-      this.ws = new socket({ url: "ws://127.0.0.1:10086" });
+      this.ws = new socket({ url: "ws://127.0.0.1:10086/osLDW5QBWjaMO82k2SL3_FWG3MVU" });
       this.wsOnmessage();
     },
     wsOnmessage() {
       if (this.ws) {
         this.ws.onmessage(msg => {
           console.log(msg);
+          this.caseNo = msg
         });
       }
     }

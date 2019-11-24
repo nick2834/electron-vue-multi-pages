@@ -38,7 +38,8 @@ function createMainWindow() {
   require('./modal');
   global.appData = {
     Authorization: "",
-    isClosed: true
+    isClosed: true,
+    openId: ""
   };
 }
 /**

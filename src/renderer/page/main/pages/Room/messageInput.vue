@@ -36,6 +36,7 @@
 <script>
 import ADragModal from "@/components/AdragModal";
 const { ipcRenderer } = require("electron");
+import socket from "@/service/websocket";
 export default {
   data() {
     return {
@@ -53,68 +54,54 @@ export default {
         desc: ""
       },
       value: "",
-      websock: null
+      ws: null
     };
   },
   computed: {
+    openid: {
+      get() {
+        return this.$store.state.user.openid;
+      }
+    },
     caseNo: {
       get() {
         return this.$store.state.cases.caseNo;
       }
     },
-    caseId:{
+    caseId: {
       get() {
         return this.$store.state.cases.caseId;
       }
-    },
+    }
   },
   components: { ADragModal },
   methods: {
     send() {
       console.log(this.value);
       // this.websock.send(this.value);
+      this.ws.send(this.value);
     },
     handleShowModal() {
-      // this.showWin = true;
-      ipcRenderer.send("showModalWindow",(this.caseNo));
-      // setTimeout(() => {
-      //   this.websocketsend(this.caseNo);
-      // }, 3000);
+      ipcRenderer.send("showModalWindow", {
+        caseNo: this.caseNo,
+        openId: this.openid
+      });
     },
     onSubmit() {
       console.log("submit!");
     },
     initWebSocket() {
-      //初始化weosocket
-      const wsuri = "ws://127.0.0.1:10086";
-      this.websock = new WebSocket(wsuri);
-      this.websock.onmessage = this.websocketonmessage;
-      this.websock.onopen = this.websocketonopen;
-      this.websock.onerror = this.websocketonerror;
-      this.websock.onclose = this.websocketclose;
-    },
-    websocketonopen() {
-      //连接建立之后执行send方法发送数据
-    },
-    websocketonerror() {
-      //连接建立失败重连
-      this.initWebSocket();
-    },
-    websocketonmessage(msg) {
-      console.log(msg.data);
-      //数据接收
-    },
-    websocketsend(Data) {
-      //数据发送
-      this.websock.send(Data);
-    },
-    websocketclose(e) {
-      //关闭
-      console.log("断开连接", e);
+      this.ws = new socket({
+        url: "ws://127.0.0.1:10086"
+      });
     }
   },
   created() {
-    // this.initWebSocket();
+    this.initWebSocket();
+  },
+  beforeDestroy() {
+    this.ws.close();
+    this.ws = null;
   }
 };
 </script>
