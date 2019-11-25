@@ -27,7 +27,7 @@ function createMainWindow() {
   });
   mainWin.loadURL(mainURL);
   // 监听渲染完成
-  // mainWin.closeDevTools();
+  mainWin.openDevTools();
   mainWin.once('ready-to-show', () => {
     // mainWin.center()
   });

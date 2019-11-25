@@ -11,6 +11,7 @@ import './config';
 import socket from './ws';
 let modalWin = null;
 let ws = null;
+
 function createModalWindow(arg) {
     ws = new socket({
         'url': `ws://127.0.0.1:10086/${arg.openId}`,
@@ -31,6 +32,7 @@ function createModalWindow(arg) {
         }
     });
     modalWin.loadURL(modalURL);
+    modalWin.openDevTools()
     // modalWin.closeDevTools();
     // 监听渲染完成
     modalWin.once('ready-to-show', () => {

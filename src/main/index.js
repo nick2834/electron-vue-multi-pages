@@ -31,8 +31,8 @@ function createLoginWindow() {
         titleBarStyle: "hidden",
         autoHideMenuBar: true
     });
-    // loginWindow.openDevTools() // 开发者工具
-    loginWindow.closeDevTools();
+    loginWindow.openDevTools() // 开发者工具
+    // loginWindow.closeDevTools();
     loginWindow.loadURL(loginURL);
     loginWindow.once('ready-to-show', () => {
         loginWindow.show();
